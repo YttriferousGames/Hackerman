@@ -1,0 +1,5 @@
+#!/bin/bash
+shopt -s globstar extglob
+
+clang-format -style=file -i $(dirname "$0")/Assets/Scripts/!(External)/**/*.cs
+
