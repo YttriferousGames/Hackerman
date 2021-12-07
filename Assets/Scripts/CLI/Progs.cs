@@ -145,12 +145,34 @@ public class Cat : Exe {
     }
 }
 
-public class SelfDestruct : Exe {
-    public SelfDestruct(Sys s) : base(s, "selfdestruct") {}
+public class Demo : Exe {
+    private int step;
+    public Demo(Sys s, int step = 4) : base(s, "demo") {
+        this.step = step;
+    }
 
     public override bool Start(string[] args) {
-        ParticleSystem p = sys.GetComponent<ParticleSystem>();
-        p.Play();
-        return true;
+        return false;
+    }
+
+    public override bool Update() {
+        if (Time.frameCount % step == 0) {
+            int frame = Time.frameCount / step;
+            float n = ((float)sys.disp.width - 1f) * (Mathf.Sin(frame / 5f) / 2f + 0.5f);
+            sys.Println();
+            for (float j = 0f; j < n; j++) {
+                sys.Print("#", new Color(n / 10, j / n, 0.8f));
+            }
+        }
+        return false;
     }
 }
+
+// public class SelfDestruct : Exe {
+//     public SelfDestruct(Sys s) : base(s, "selfdestruct") {}
+//     public override bool Start(string[] args) {
+//         ParticleSystem p = sys.GetComponent<ParticleSystem>();
+//         p.Play();
+//         return true;
+//     }
+// }

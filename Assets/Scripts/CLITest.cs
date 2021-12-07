@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Text;
+using System;
 
 public class CLITest : MonoBehaviour {
     // Start is called before the first frame update
@@ -37,7 +39,7 @@ public class CLITest : MonoBehaviour {
 
     public void HandleInput() {
         if (current == null) {
-            string[] inp = Input.inputString.Split(new char[] {'\n', '\r'});
+            string[] inp = Input.inputString.Split(new string[] {"\r\n", "\n", "\r"}, StringSplitOptions.None);
             if (inp.Length > 0) {
                 if (inp[0].Length > 0) {
                     buffer += inp[0];

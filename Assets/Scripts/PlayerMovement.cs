@@ -46,7 +46,7 @@ public class PlayerMovement : MonoBehaviour {
 
         bool handleInput = true;
         RaycastHit h = new RaycastHit();
-        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out h, 4f, 1 << 6, QueryTriggerInteraction.Ignore)) {
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out h, 1f, 1 << 6, QueryTriggerInteraction.Ignore)) {
             CLITest s = h.collider.gameObject.GetComponent<CLITest>();
             if (s != null) {
                 s.HandleInput();

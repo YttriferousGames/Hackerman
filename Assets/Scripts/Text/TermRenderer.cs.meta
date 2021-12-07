@@ -4,7 +4,7 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - fb: {instanceID: 0}
+  - font: {fileID: 11400000, guid: 8f4d6a643d807ce5da4b90213c840ee0, type: 2}
   - tex: {instanceID: 0}
   - mat: {fileID: 2100000, guid: 6b3eb6d8821f28de6821178477969632, type: 2}
   executionOrder: -50

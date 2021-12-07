@@ -83,7 +83,7 @@ public class Sys : MonoBehaviour {
             new Dir("bin",
                     new Node[] { new Echo(this), new External(this, "pacman"),
                                  new Symlink("yay", "/bin/pacman"), new CD(this), new PWD(this),
-                                 new LS(this), new Cat(this), new SelfDestruct(this) }),
+                                 new LS(this), new Cat(this), new Demo(this) }),
             new Dir("home", new Node[] { new Dir(
                                 "geff", new Node[] { new File("README.txt", "Hello, world!") }) })
         };
