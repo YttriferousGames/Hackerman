@@ -44,12 +44,22 @@ public class PlayerMovement : MonoBehaviour {
         transform.eulerAngles = new Vector3(0f, angle, 0f);
         cam.transform.localEulerAngles = new Vector3(camAngle, 0, 0f);
 
+        bool handleInput = true;
+        RaycastHit h = new RaycastHit();
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out h, 4f, 1 << 6, QueryTriggerInteraction.Ignore)) {
+            CLITest s = h.collider.gameObject.GetComponent<CLITest>();
+            if (s != null) {
+                s.HandleInput();
+                handleInput = false;
+            }
+        }
+
         bool groundedPlayer = controller.isGrounded;
         if (controller.isGrounded) {
             if (playerVelocity.y < 0) {
                 playerVelocity.y = 0f;
             }
-            if (Input.GetButtonDown("Jump")) {
+            if (handleInput && Input.GetButtonDown("Jump")) {
                 playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
             }
         }
@@ -59,6 +69,7 @@ public class PlayerMovement : MonoBehaviour {
         Vector3 move = (transform.right * Input.GetAxis("Horizontal") +
                         transform.forward * Input.GetAxis("Vertical")) *
                        playerSpeed;
+        if (!handleInput) move = Vector3.zero;
         controller.Move((move + playerVelocity) * Time.deltaTime);
     }
 }

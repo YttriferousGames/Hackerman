@@ -118,8 +118,12 @@ public class TermRenderer : MonoBehaviour {
 
     // TODO handle \n
     public void Print(string s, Nullable<Color32> col = null) {
-        buffer.AddRange(System.Text.Encoding.ASCII.GetBytes(s).Select(b => new Cell(b, col)));
-        hasNewlined = false; needsRender = true;
+        string[] lines = s.Split('\n');
+        for (int i = 0; i < lines.Length; i++) {
+            buffer.AddRange(
+                System.Text.Encoding.ASCII.GetBytes(lines[i]).Select(b => new Cell(b, col)));
+            if (i < lines.Length - 1) { Println(); } hasNewlined = false; needsRender = true;
+        }
     }
 
     public void Println() {
@@ -136,6 +140,13 @@ public class TermRenderer : MonoBehaviour {
         Print(s, col);
         Println();
         needsRender = true;
+    }
+
+    // TODO this falls apart beyond a single line (obviously)
+    public void SetLine(string s, Nullable<Color32> col = null) {
+        buffer.RemoveRange((buffer.Count / width) * width,
+                           buffer.Count - (buffer.Count / width) * width);
+        Print(s, col);
     }
 
     // Start is called before the first frame update

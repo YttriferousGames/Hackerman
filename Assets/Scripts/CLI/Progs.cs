@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using UnityEngine;
 
 public class Echo : Exe {
     public Echo(Sys s) : base(s, "echo") {}
@@ -140,6 +141,16 @@ public class Cat : Exe {
                 sys.Println("cat: " + s + ": is not a file");
             }
         }
+        return true;
+    }
+}
+
+public class SelfDestruct : Exe {
+    public SelfDestruct(Sys s) : base(s, "selfdestruct") {}
+
+    public override bool Start(string[] args) {
+        ParticleSystem p = sys.GetComponent<ParticleSystem>();
+        p.Play();
         return true;
     }
 }

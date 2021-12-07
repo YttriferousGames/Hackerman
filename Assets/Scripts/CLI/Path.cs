@@ -41,15 +41,18 @@ public class Path {
     // TODO make it compliant to all edgecases and weird stuff
     public Path(string path) {
         char pre = path[0];
+        string p = path;
         switch (pre) {
             case '/':
                 pathType = PathType.Absolute;
+                p = path[1..];
                 break;
             case '~':
                 pathType = PathType.Home;
+                p = path[1..];
                 break;
         }
-        nodes = path[1..].Split('/', StringSplitOptions.RemoveEmptyEntries);
+        nodes = p.Split('/', StringSplitOptions.RemoveEmptyEntries);
         List<string> betterNodes = new List<string>();
         foreach (string n in nodes) {
             switch (n) {

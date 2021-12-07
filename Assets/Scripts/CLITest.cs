@@ -1,36 +1,73 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public class CLITest : MonoBehaviour {
     // Start is called before the first frame update
     private Sys s = null;
-    private Exe pac = null;
+    private Exe current = null;
+    private string buffer = "";
+    private static Regex regex = new Regex(@"(?<L>[^\b])+(?<R-L>[\b])+(?(L)(?!))");
 
-    private Exe Run(Sys s, string cmd) {
-        s.Println("$ " + cmd, Color.green);
+    private Exe Run(string cmd) {
+        //s.Println("$ " + cmd, Color.green);
         string[] args = cmd.Split(' ');
         Exe prog = s.GetProgram(args[0]);
+        bool done = true;
         try {
-            prog.Start(args[1..]);
+            done = prog.Start(args[1..]);
         } catch (System.Exception e) {
             s.Println(e.ToString(), Color.red);
         }
-        return prog;
+        if (done) {
+            ProgFinish();
+            return null;
+        } else {
+            return prog;
+        }
+    }
+
+    void ProgFinish() {
+        s.Print("$ ", Color.green);
+    }
+
+    static string FixBackspace(string s) {
+        return regex.Replace(s, "").Replace("\b", "");
+    }
+
+    public void HandleInput() {
+        if (current == null) {
+            string[] inp = Input.inputString.Split(new char[] {'\n', '\r'});
+            if (inp.Length > 0) {
+                if (inp[0].Length > 0) {
+                    buffer += inp[0];
+                    buffer = FixBackspace(buffer);
+                    // JANK
+                    s.disp.SetLine("$ " + buffer, Color.green);
+                }
+                if (inp.Length > 1) {
+                    s.Println();
+                    current = Run(buffer);
+                    buffer = "";
+                }
+            }
+        }
     }
 
     void Start() {
         s = GetComponent<Sys>();
-
-        Run(s, "echo one two oatmeal");
-        Run(s, "ls ./ ../../ /bin/");
-        Run(s, "cd /home/.");
-        Run(s, "cat geff/README.txt");
-        Run(s, "ls ./ geff/ geff/README.txt");
-
-        pac = Run(s, "pacman -Ss steam");
+        s.Println("[Alibaba Intelligence OS v0.1]", Color.cyan);
+        ProgFinish();
     }
 
     // Update is called once per frame
     void Update() {
-        if (pac != null) pac.Update();
+        if (current != null) {
+            if (current.Update()) {
+                current = null;
+                ProgFinish();
+                return;
+            }
+        }
     }
 }
