@@ -1,0 +1,5 @@
+#!/bin/sh
+c++ pcf2bdf.cc -o pcf2bdf
+pcf2bdf "$1" > tmp.bdf
+bdf2img.py tmp.bdf "$1".png
+rm -f tmp.bdf
