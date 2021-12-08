@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour {
     private CharacterController controller;
     private Vector3 playerVelocity;
@@ -46,8 +47,9 @@ public class PlayerMovement : MonoBehaviour {
 
         bool handleInput = true;
         RaycastHit h = new RaycastHit();
-        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out h, 1f, 1 << 6, QueryTriggerInteraction.Ignore)) {
-            CLITest s = h.collider.gameObject.GetComponent<CLITest>();
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out h, 1f, 1 << 6,
+                            QueryTriggerInteraction.Ignore)) {
+            Shell s = h.collider.gameObject.GetComponent<Shell>();
             if (s != null) {
                 s.HandleInput();
                 handleInput = false;
@@ -69,7 +71,8 @@ public class PlayerMovement : MonoBehaviour {
         Vector3 move = (transform.right * Input.GetAxis("Horizontal") +
                         transform.forward * Input.GetAxis("Vertical")) *
                        playerSpeed;
-        if (!handleInput) move = Vector3.zero;
+        if (!handleInput)
+            move = Vector3.zero;
         controller.Move((move + playerVelocity) * Time.deltaTime);
     }
 }

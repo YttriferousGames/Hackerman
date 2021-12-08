@@ -59,8 +59,11 @@ public class Path {
                 case ".":
                     break;
                 case "..":
-                    if (betterNodes.Any())
+                    if (betterNodes.Any()) {
                         betterNodes.RemoveAt(betterNodes.Count - 1);
+                    } else {
+                        betterNodes.Add(n);
+                    }
                     break;
                 default:
                     betterNodes.Add(n);

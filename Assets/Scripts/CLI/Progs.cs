@@ -12,6 +12,7 @@ public class Echo : Exe {
     }
 }
 
+#if UNITY_STANDALONE
 // Security risk? yes.
 // Fun? ye
 public class External : Exe {
@@ -62,6 +63,7 @@ public class External : Exe {
         return true;
     }
 }
+#endif
 
 public class CD : Exe {
     public CD(Sys s) : base(s, "cd") {}

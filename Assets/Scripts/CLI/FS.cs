@@ -6,8 +6,8 @@ using System.Linq;
 public abstract class Node {
     // Name (on filesystem) of node
     public string Name;
-    bool readOnly = false;
-    bool hidden = false;
+    // bool readOnly = false;
+    // bool hidden = false;
 }
 
 // File node (stores text contents)
@@ -71,6 +71,8 @@ public abstract class Exe : File {
     }
 }
 
+// TODO this should be a ScriptableObject
+// So they can be edited in the UI, and then layered
 public class FS {
     // TODO
 }

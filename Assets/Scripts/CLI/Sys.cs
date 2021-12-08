@@ -80,10 +80,18 @@ public class Sys : MonoBehaviour {
 
     public void Start() {
         root = new Node[] {
-            new Dir("bin",
-                    new Node[] { new Echo(this), new External(this, "pacman"),
-                                 new Symlink("yay", "/bin/pacman"), new CD(this), new PWD(this),
-                                 new LS(this), new Cat(this), new Demo(this) }),
+            new Dir("bin", new Node[] {
+                new Echo(this),
+#if UNITY_STANDALONE
+                new External(this, "pacman"),
+                new Symlink("yay", "/bin/pacman"),
+#endif
+                new CD(this),
+                new PWD(this),
+                new LS(this),
+                new Cat(this),
+                new Demo(this)
+            }),
             new Dir("home", new Node[] { new Dir(
                                 "geff", new Node[] { new File("README.txt", "Hello, world!") }) })
         };

@@ -24,11 +24,19 @@ public class BitFont : ScriptableObject {
     }
 
     // Gets pixel coordinates of specific character
-    private ((int, int), (int, int)) GetCharBounds(byte c) {
-        int w = charWidth;
-        int h = charHeight;
-        int x = 1 + (w + 2) * (c % 16);
-        int y = 1 + (h + 2) * (flipY ? (15 - c / 16) : (c / 16));
+    private ((int, int), (int, int)) GetCharBounds(byte c, bool includePad = false) {
+        int w, h, x, y;
+        if (includePad) {
+            w = charWidth + 2;
+            h = charHeight + 2;
+            x = w * (c % 16);
+            y = h * (flipY ? (15 - c / 16) : (c / 16));
+        } else {
+            w = charWidth;
+            h = charHeight;
+            x = 1 + (w + 2) * (c % 16);
+            y = 1 + (h + 2) * (flipY ? (15 - c / 16) : (c / 16));
+        }
         return ((x, y), (x + w, y + h));
     }
 
@@ -38,21 +46,32 @@ public class BitFont : ScriptableObject {
     }
 
     // Gets UV coordinates of specific character
-    public ((float, float), (float, float)) GetCharUV(byte c) {
+    private ((float, float), (float, float)) GetCharUV(byte c, bool includePad) {
         float w = atlas.width;
         float h = atlas.height;
-        ((float a, float b), (float x, float y)) = GetCharBounds(c);
+        ((float a, float b), (float x, float y)) = GetCharBounds(c, includePad);
         return ((a / w, b / h), (x / w, y / h));
     }
 
-    public Mesh GenMesh(IEnumerable<(Vector2, Color32, byte)> chars, Vector2 size, Mesh m = null) {
+    public Mesh GenMesh(IEnumerable<(Vector2, Color32, byte)> chars, Vector2 size, Mesh m = null,
+                        bool pad = false) {
         List<Vector3> verts = new List<Vector3>();
         List<Color32> cols = new List<Color32>();
         List<Vector2> uvs = new List<Vector2>();
         List<ushort> ind = new List<ushort>();
 
+        Vector2 offset = Vector2.zero;
+        if (pad) {
+            size = (size * new Vector2(charWidth + 2f, charHeight + 2f)) /
+                   new Vector2(charWidth, charHeight);
+            offset = -size / new Vector2(charWidth + 2, charHeight + 2);
+        }
+
         ushort n = 0;
-        foreach ((Vector2 pos, Color32 col, byte c) in chars) {
+        foreach ((Vector2 p, Color32 col, byte c) in chars) {
+            Vector2 pos = p;
+            if (pad)
+                pos += offset;
             verts.Add(new Vector3(pos.x, pos.y, 0.0f));
             verts.Add(new Vector3(pos.x + size.x, pos.y, 0.0f));
             verts.Add(new Vector3(pos.x + size.x, pos.y + size.y, 0.0f));
@@ -60,7 +79,7 @@ public class BitFont : ScriptableObject {
 
             for (byte j = 0; j < 4; j++) cols.Add(col);
 
-            ((float srcX, float srcY), (float outerX, float outerY)) = GetCharUV(c);
+            ((float srcX, float srcY), (float outerX, float outerY)) = GetCharUV(c, pad);
 
             uvs.Add(new Vector2(srcX, srcY));
             uvs.Add(new Vector2(outerX, srcY));

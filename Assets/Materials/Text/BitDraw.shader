@@ -36,7 +36,7 @@ SubShader {
             struct v2f {
                 float4 vertex : SV_POSITION;
                 // Fixes artifacts in nearest sampling
-                centroid half2 texcoord : TEXCOORD0;
+                /*centroid*/ half2 texcoord : TEXCOORD0;
                 fixed4 color : COLOR;
                 UNITY_FOG_COORDS(1)
             };

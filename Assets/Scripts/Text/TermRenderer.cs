@@ -13,6 +13,7 @@ using System.Linq;
 //   renderer?
 // - The mesh code would be cool for UI elements so abstract that out too
 
+[RequireComponent(typeof(MeshRenderer))]
 public class TermRenderer : MonoBehaviour {
     public BitFont font;
     public int width = 40;
@@ -111,7 +112,7 @@ public class TermRenderer : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        Renderer r = GetComponent<Renderer>();
+        MeshRenderer r = GetComponent<MeshRenderer>();
 
         cmd = new CommandBuffer();
         tex = new RenderTexture((font.charWidth + pad) * width + pad,
