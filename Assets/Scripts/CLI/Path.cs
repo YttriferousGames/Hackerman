@@ -1,3 +1,5 @@
+// Utilities for manipulating paths
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,3 +1,5 @@
+// Controls buttons on Main Menu and loading to next scene
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

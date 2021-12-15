@@ -202,6 +202,7 @@ MonoBehaviour:
   width: 40
   height: 18
   scroll: 0
+  overrideRender: 0
   rend: {fileID: 4481129236898843637}
 --- !u!114 &4481129236898843637
 MonoBehaviour:
@@ -230,7 +231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b10ffa120914aeb3a57ce65e7c55f4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layers: 00000000
+  layers: 0000000001000000
   disp: {fileID: 7310010447861030595}
 --- !u!114 &4481129236898843641
 MonoBehaviour:

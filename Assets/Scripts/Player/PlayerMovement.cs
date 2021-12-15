@@ -1,3 +1,5 @@
+// Player movement and interaction
+
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]

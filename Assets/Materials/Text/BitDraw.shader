@@ -9,6 +9,7 @@ Shader "Unlit/BitDraw" {
 Properties {
    _MainTex ("Base (RGB) Trans (A)", 2D) = "white" {}
    [MaterialToggle] _smoothPixels("Smooth Pixels", Float) = 0
+   [MaterialToggle] _garbleNull("Garble NUL characters", Float) = 0
 }
 
 SubShader {
@@ -45,6 +46,7 @@ SubShader {
             float4 _MainTex_ST;
             float4 _MainTex_TexelSize;
             float _smoothPixels;
+            float _garbleNull;
 
             v2f vert (appdata_t v)
             {
@@ -54,6 +56,20 @@ SubShader {
                 o.color = v.color;
                 UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
+            }
+
+            // TODO fix edge artifacts
+            // Probably by disabling smooth on garbled characters
+            float2 garble(float2 uv) {
+                const float sixteenth = 1. / 16.;
+                if (_garbleNull > 0.5 && uv.x < sixteenth && uv.y > (1. - sixteenth)) {
+                    float n = floor((60. * _Time.y) % 256.);
+                    uv.x += sixteenth * (n % 16.);
+                    uv.y += sixteenth * floor(n / 16.);
+                    return uv;
+                } else {
+                    return uv;
+                }
             }
 
             float4 texturePointSmooth(float2 uv) {
@@ -81,7 +97,7 @@ SubShader {
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col;
-                col = fixed4(i.color.rgb, i.color.a * texturePointSmooth(i.texcoord).a);
+                col = fixed4(i.color.rgb, i.color.a * texturePointSmooth(garble(i.texcoord)).a);
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
             }

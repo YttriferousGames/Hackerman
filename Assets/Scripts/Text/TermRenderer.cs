@@ -1,8 +1,22 @@
+// Terminal rendering code
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-// Idea: unprintable characters (like \0) can be animated garbled text (like in Minecraft).
+public struct Cell {
+    public byte chr;
+    public Color32 col;
+
+    public Cell(byte character, Color32? color = null) {
+        chr = character;
+        if (color is Color32 c) {
+            col = c;
+        } else {
+            col = new Color32(255, 255, 255, 255);
+        }
+    }
+}
 
 [RequireComponent(typeof(MeshRenderer))]
 public class TermRenderer : MonoBehaviour {

@@ -1,3 +1,5 @@
+// Contains font data as used in 3D text/terminal
+
 using System;
 using UnityEngine;
 using System.Collections.Generic;

@@ -1,28 +1,11 @@
+// Layout of text to be drawn in terminal
+
+// TODO abstract this code more: scroll could be moved Shell's code?
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-
-// TODO abstract this code more:
-// - For example, scroll layout can be separate from screen contents
-//   (as would be used by shell, less, text editor, title screen etc)
-// - Perhaps scroll can be tucked into the shell's code, not the term
-//   renderer?
-// - The mesh code would be cool for UI elements so abstract that out too
-
-public struct Cell {
-    public byte chr;
-    public Color32 col;
-
-    public Cell(byte character, Color32? color = null) {
-        chr = character;
-        if (color is Color32 c) {
-            col = c;
-        } else {
-            col = new Color32(255, 255, 255, 255);
-        }
-    }
-}
 
 [RequireComponent(typeof(TermRenderer))]
 public class TermLayout : MonoBehaviour {

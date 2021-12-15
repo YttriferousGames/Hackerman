@@ -1,3 +1,6 @@
+// The glue between input and the Shell
+// TODO fairly pointless, could be removed if refactored
+
 using UnityEngine;
 
 [RequireComponent(typeof(Sys))]
