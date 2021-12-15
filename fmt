@@ -1,3 +1,0 @@
-#!/bin/bash
-shopt -s globstar
-clang-format -style=file -i $(dirname "$0")/Assets/**/*.cs
