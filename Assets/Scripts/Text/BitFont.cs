@@ -1,14 +1,20 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Text;
 
 [CreateAssetMenu(fileName = "NewBitFont", menuName = "BitFont", order = 1)]
 public class BitFont : ScriptableObject {
-    public Texture2D atlas;
-    public bool flipY = false;
+    [SerializeField]
+    private Texture2D atlas;
+    [SerializeField]
+    private bool flipY = false;
     private const int pad = 16 * 2;
     public int charWidth { get => (atlas.width - pad) >> 4; }
     public int charHeight { get => (atlas.height - pad) >> 4; }
+    // Technically 1252 is correct but that is unavailable
+    public static readonly Encoding codePage = System.Text.Encoding.ASCII;
+    public Texture2D Atlas { get => atlas; }
 
     public BitFont(Texture2D fontAtlas, bool flipAtlasY = false) {
         atlas = fontAtlas;

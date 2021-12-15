@@ -76,3 +76,5 @@ crashlytics-build.properties
 
 *.blend?
 /pcf/pcf2bdf
+/pcf/*.bdf
+/pcf/*.png

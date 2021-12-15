@@ -1,5 +1,11 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+
+public class EnvVars {
+    private Dictionary<string, string> vars = new Dictionary<string, string>();
+}
 
 // TODO layered FS where files are added/removed/modified as game progresses, per PC.
 // Not sure how to implement, I could use [Flags] or an incrementing integer.
@@ -12,27 +18,46 @@ using UnityEngine;
 public class Sys : MonoBehaviour {
     public Path[] sysPath = { "/bin" };
 
-    public Node[] root;
+    public FSLayerName[] layers = new FSLayerName[] { FSLayerName.Base };
+    public FS fs;
 
-    public TermRenderer disp;
+    public TermLayout disp;
 
     public Node GetNode(Path path) {
         Path abs = CanonPath(path);
-        Node current = new Dir("PogChamp", root);
-        foreach (string n in abs.nodes) {
-            if (current is Dir d) {
-                current = d.Contents.Find(x => x.Name == n);
-            } else {
-                return null;
-            }
-        }
-        return current;
+        return fs.GetNode(abs);
+    }
+
+    public Node GetNode(Path path, bool recurseSymlinks) {
+        Path abs = CanonPath(path);
+        return fs.GetNode(abs, recurseSymlinks);
+    }
+
+    public T GetNode<T>(Path path)
+        where T : class {
+        Path abs = CanonPath(path);
+        return fs.GetNode<T>(abs);
+    }
+
+    public T GetNode<T>(Path path, bool recurseSymlinks)
+        where T : class {
+        Path abs = CanonPath(path);
+        return fs.GetNode<T>(abs, recurseSymlinks);
+    }
+
+    public Node ResolveSymlink(Node node) {
+        return fs.ResolveSymlink(node);
+    }
+
+    public T ResolveSymlink<T>(Node node)
+        where T : class {
+        return fs.ResolveSymlink<T>(node);
     }
 
     public Exe GetProgram(string proc) {
         foreach (Path p in sysPath) {
             if (GetNode(p) is Dir d) {
-                Node n = Unlink(d.Contents.Find(x => x.Name == proc));
+                Node n = ResolveSymlink<Exe>(d.Contents.Find(x => x.Name == proc));
                 if (n is Exe exe) return exe;
             }
         }
@@ -46,19 +71,8 @@ public class Sys : MonoBehaviour {
         switch (path.pathType) {
             case PathType.Relative:
                 return path.WithBase(workingDir);
-            case PathType.Home:
-                return path.WithBase(home);
             default:
                 return new Path(path);
-        }
-    }
-
-    // TODO symlink to symlink, avoid loop
-    public Node Unlink(Node node) {
-        if (node is Symlink link) {
-            return GetNode(link.Target);
-        } else {
-            return node;
         }
     }
 
@@ -78,22 +92,11 @@ public class Sys : MonoBehaviour {
         disp.Println(s, col);
     }
 
+    public void SetScreen(Cell[,] screen) {
+        disp.Render(screen);
+    }
+
     public void Start() {
-        root = new Node[] {
-            new Dir("bin", new Node[] {
-                new Echo(this),
-#if UNITY_STANDALONE
-                new External(this, "pacman"),
-                new Symlink("yay", "/bin/pacman"),
-#endif
-                new CD(this),
-                new PWD(this),
-                new LS(this),
-                new Cat(this),
-                new Demo(this)
-            }),
-            new Dir("home", new Node[] { new Dir(
-                                "geff", new Node[] { new File("README.txt", "Hello, world!") }) })
-        };
+        fs = new StackedFS(layers.Select(l => l.Create()));
     }
 }

@@ -1,19 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
-using UnityEngine;
-using UnityEditor;
 
 public enum PathType {
     // Relative to /
     Absolute,
     // Relative to ./
     Relative,
-    // Relative to ~/
-    Home,
 }
 
+// TODO only support absolute paths and disambiguify in the constructor (based on context)
 public class Path {
     public readonly string[] nodes;
     public readonly PathType pathType = PathType.Relative;
@@ -26,9 +22,6 @@ public class Path {
             case PathType.Absolute:
                 p = "/";
                 break;
-            case PathType.Home:
-                p = "~";
-                break;
             default:
                 p = "";
                 break;
@@ -38,21 +31,7 @@ public class Path {
         return p;
     }
 
-    // TODO make it compliant to all edgecases and weird stuff
-    public Path(string path) {
-        char pre = path[0];
-        string p = path;
-        switch (pre) {
-            case '/':
-                pathType = PathType.Absolute;
-                p = path[1..];
-                break;
-            case '~':
-                pathType = PathType.Home;
-                p = path[1..];
-                break;
-        }
-        nodes = p.Split('/', StringSplitOptions.RemoveEmptyEntries);
+    private string[] SimplifyNodes(IEnumerable<string> nodes) {
         List<string> betterNodes = new List<string>();
         foreach (string n in nodes) {
             switch (n) {
@@ -70,7 +49,18 @@ public class Path {
                     break;
             }
         }
-        nodes = betterNodes.ToArray();
+        return betterNodes.ToArray();
+    }
+
+    // TODO make it compliant to all edgecases and weird stuff
+    public Path(string path) {
+        char pre = path[0];
+        string p = path;
+        if (pre == '/') {
+            pathType = PathType.Absolute;
+            p = path[1..];
+        }
+        nodes = SimplifyNodes(p.Split('/', StringSplitOptions.RemoveEmptyEntries));
     }
 
     private Path(string[] n, PathType pt) {
@@ -79,7 +69,7 @@ public class Path {
     }
 
     public Path(Path p) {
-        nodes = p.nodes;
+        nodes = SimplifyNodes(p.nodes);
         pathType = p.pathType;
     }
 

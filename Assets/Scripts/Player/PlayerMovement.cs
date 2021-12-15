@@ -4,15 +4,18 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour {
     private CharacterController controller;
     private Vector3 playerVelocity;
-    public Camera cam;
-    public float playerSpeed = 8.0f;
-    public float jumpHeight = 1.0f;
+    [SerializeField]
+    private Camera cam;
+    [SerializeField]
+    private float playerSpeed = 8.0f;
+    [SerializeField]
+    private float jumpHeight = 1.0f;
     private float gravityValue;
-
-    public float sensitivity = 10f;
+    [SerializeField]
+    private float sensitivity = 10f;
 
     // Start is called before the first frame update
-    void Start() {
+    private void Start() {
         controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         gravityValue = Physics.gravity.y;
@@ -21,8 +24,12 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
+    private static float NormAngle(float angle) {
+        return angle - 360 * Mathf.Floor(angle / 360);
+    }
+
     // Update is called once per frame
-    void Update() {
+    private void Update() {
         if (Input.GetKey(KeyCode.Escape)) {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -41,15 +48,16 @@ public class PlayerMovement : MonoBehaviour {
         float camAngle = cam.transform.localEulerAngles.x;
         angle += mX * sensitivity;
         camAngle -= mY * sensitivity;
-        // camAngle = Mathf.Clamp(camAngle, -90, 90);
+        camAngle = NormAngle(180 - camAngle);
+        camAngle = -Mathf.Clamp(camAngle, 90, 270) + 180;
         transform.eulerAngles = new Vector3(0f, angle, 0f);
         cam.transform.localEulerAngles = new Vector3(camAngle, 0, 0f);
 
         bool handleInput = true;
         RaycastHit h = new RaycastHit();
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out h, 1f, 1 << 6,
-                            QueryTriggerInteraction.Ignore)) {
-            Shell s = h.collider.gameObject.GetComponent<Shell>();
+                            QueryTriggerInteraction.Collide)) {
+            SysInterface s = h.collider.gameObject.GetComponent<SysInterface>();
             if (s != null) {
                 s.HandleInput();
                 handleInput = false;

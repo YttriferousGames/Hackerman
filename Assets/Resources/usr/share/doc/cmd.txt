@@ -1,0 +1,7 @@
+echo: Repeats the arguments you provide to it
+cd: Changes the current directory
+pwd: Prints the current directory
+ls: Lists the files in the current directory
+cat: Reads the contents of a file
+demo: Just a cool demo
+sh: You're using it right now

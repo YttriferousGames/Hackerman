@@ -39,7 +39,7 @@ public class BitText : MonoBehaviour {
 
         string[] lines = text.Split(newlines, StringSplitOptions.None);
         for (int y = 0; y < lines.Length; y++) {
-            byte[] line = System.Text.Encoding.ASCII.GetBytes(lines[y]);
+            byte[] line = BitFont.codePage.GetBytes(lines[y]);
             float hOffset = 0f;
             if (horizontalAlignment == HAlign.CJustified) {
                 hOffset = -(line.Length * charWidth + (line.Length - 1) * pad.x) / 2f;
