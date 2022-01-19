@@ -28,7 +28,6 @@ public class BitText : MonoBehaviour {
     private bool includePad = true;
     private static string materialName = "Assets/Materials/Text/Text.mat";
 
-    private static readonly string[] newlines = { "\r\n", "\r", "\n" };
     private MeshFilter mf = null;
 
     private IEnumerable<(Vector2, Color32, byte)> Cells() {
@@ -39,7 +38,7 @@ public class BitText : MonoBehaviour {
         // Distance between start of two characters vertically
         float vStride = -size - pad.y;
 
-        string[] lines = text.Split(newlines, StringSplitOptions.None);
+        string[] lines = text.SplitNewlines();
         for (int y = 0; y < lines.Length; y++) {
             byte[] line = BitFont.codePage.GetBytes(lines[y]);
             float hOffset = 0f;
@@ -63,9 +62,11 @@ public class BitText : MonoBehaviour {
         return font.GenMesh(Cells(), s, m, includePad);
     }
 
-    // Start is called before the first frame update
-    private void Start() {
+    private void Awake() {
         mf = GetComponent<MeshFilter>();
+    }
+
+    private void Start() {
         UpdateMesh();
     }
 

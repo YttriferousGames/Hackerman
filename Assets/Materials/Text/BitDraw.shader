@@ -58,22 +58,31 @@ SubShader {
                 return o;
             }
 
-            // TODO fix edge artifacts
-            // Probably by disabling smooth on garbled characters
-            float2 garble(float2 uv) {
+            // TODO different garble for each character
+            float2 garble(float2 uv, out bool didGarble) {
                 const float sixteenth = 1. / 16.;
-                if (_garbleNull > 0.5 && uv.x < sixteenth && uv.y > (1. - sixteenth)) {
+                // This is a hack to get rid of artifacts on the edge
+                const float tol = 0.001;
+                if (_garbleNull > 0.5 && uv.x <= sixteenth + tol && uv.y >= (1. - (sixteenth + tol))) {
+                    didGarble = true;
                     float n = floor((60. * _Time.y) % 256.);
+                    if (_smoothPixels > 0.5f) {
+                        uv += float2(
+                            0.0012f * cos(8. * _Time.y + 7. * uv.y),
+                            0.001f * sin(10. * _Time.y + 10. * uv.x)
+                        );
+                    }
                     uv.x += sixteenth * (n % 16.);
                     uv.y += sixteenth * floor(n / 16.);
                     return uv;
                 } else {
+                    didGarble = false;
                     return uv;
                 }
             }
 
-            float4 texturePointSmooth(float2 uv) {
-                if (_smoothPixels > 0.5f) {
+            float4 texturePointSmooth(float2 uv, bool smooth) {
+                if (smooth) {
                     // https://github.com/CptPotato/GodotThings/tree/master/SmoothPixelFiltering#the-algorithm
                     float2 ddX = ddx(uv);
                     float2 ddY = ddy(uv);
@@ -97,7 +106,8 @@ SubShader {
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col;
-                col = fixed4(i.color.rgb, i.color.a * texturePointSmooth(garble(i.texcoord)).a);
+                bool didGarble = false;
+                col = fixed4(i.color.rgb, i.color.a * texturePointSmooth(garble(i.texcoord, didGarble), _smoothPixels > 0.5f).a);
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
             }

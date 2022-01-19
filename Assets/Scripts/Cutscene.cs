@@ -12,9 +12,11 @@ public class Cutscene : MonoBehaviour {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-    // Start is called before the first frame update
-    private void Start() {
+    private void Awake() {
         vp = GetComponent<VideoPlayer>();
+    }
+
+    private void Start() {
         vp.loopPointReached += ChangeScene;
     }
 }

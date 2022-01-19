@@ -10,12 +10,18 @@ using System.Linq;
 
 // TODO contains state of a system
 public class Sys : MonoBehaviour {
-    public Path[] sysPath = { "/bin" };
+    public readonly Path[] sysPath = { "/bin" };
 
-    public FSLayerName[] layers = new FSLayerName[] { FSLayerName.Base };
-    public FS fs;
+    [SerializeField]
+    private FSLayerName[] layers = new FSLayerName[] { FSLayerName.Base };
+    private FS fs;
 
-    public TermLayout disp;
+    // TODO expose dimensions in a logical way
+    [System.Obsolete]
+    public readonly int width = 40;
+
+    public readonly Path home = "/home/geff/";
+    public Path workingDir = "/home/geff/";
 
     public Node GetNode(Path path) {
         Path abs = CanonPath(path);
@@ -63,9 +69,6 @@ public class Sys : MonoBehaviour {
         }
     }
 
-    public Path home = "/home/geff/";
-    public Path workingDir = "/home/geff/";
-
     public Path CanonPath(Path path) {
         switch (path.pathType) {
             case PathType.Relative:
@@ -75,27 +78,7 @@ public class Sys : MonoBehaviour {
         }
     }
 
-    public void Print() {
-        disp.Print();
-    }
-
-    public void Print(string s, Nullable<Color32> col = null) {
-        disp.Print(s, col);
-    }
-
-    public void Println() {
-        disp.Println();
-    }
-
-    public void Println(string s, Nullable<Color32> col = null) {
-        disp.Println(s, col);
-    }
-
-    public void SetScreen(Cell[,] screen) {
-        disp.Render(screen);
-    }
-
-    public void Start() {
+    private void Start() {
         fs = new StackedFS(layers.Select(l => l.Create()));
     }
 }

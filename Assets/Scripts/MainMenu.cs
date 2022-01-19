@@ -15,7 +15,7 @@ public class MainMenu : MonoBehaviour {
     private GameObject quit;
     private BitText quit_bt;
 
-    private void Start() {
+    private void Awake() {
         cam = GetComponent<Camera>();
         play_bt = play.GetComponent<BitText>();
         quit_bt = quit.GetComponent<BitText>();
@@ -41,7 +41,11 @@ public class MainMenu : MonoBehaviour {
                 BitText bt = quit.GetComponent<BitText>();
                 quit_bt.col = Color.white;
                 if (Input.GetMouseButton(0))
+#if UNITY_EDITOR
+                    UnityEditor.EditorApplication.isPlaying = false;
+#else
                     Application.Quit();
+#endif
             }
         }
         play_bt.UpdateMesh();

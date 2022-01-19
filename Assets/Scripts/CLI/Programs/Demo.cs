@@ -10,10 +10,10 @@ public class Demo : Exe {
     protected override IEnumerable<int?> Run(ProgData d) {
         while (true) {
             float t = Time.time;
-            float n = ((float)d.sys.disp.width - 1f) * (Mathf.Sin(t * 4f) / 2f + 0.5f);
-            d.sys.Println();
+            float n = ((float)d.sys.width - 1f) * (Mathf.Sin(t * 4f) / 2f + 0.5f);
+            d.Println();
             for (float j = 0f; j < n; j++) {
-                d.sys.Print("#", new Color(n / 10, j / n, 0.8f));
+                d.Print("#", new Color(n / 10, j / n, 0.8f));
             }
             while (t + step > Time.time) yield return null;
         }

@@ -16,14 +16,16 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField]
     private float sensitivity = 10f;
 
-    // Start is called before the first frame update
-    private void Start() {
+    private void Awake() {
         controller = GetComponent<CharacterController>();
-        Cursor.lockState = CursorLockMode.Locked;
         gravityValue = Physics.gravity.y;
         if (cam == null) {
             cam = Camera.main;
         }
+    }
+
+    private void Start() {
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private static float NormAngle(float angle) {

@@ -56,7 +56,7 @@ public class Path {
 
     // TODO make it compliant to all edgecases and weird stuff
     public Path(string path) {
-        char pre = path[0];
+        char pre = path.Length > 0 ? path[0] : '.';
         string p = path;
         if (pre == '/') {
             pathType = PathType.Absolute;

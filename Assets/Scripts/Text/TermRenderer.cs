@@ -3,18 +3,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Assertions;
 
 public struct Cell {
     public byte chr;
     public Color32 col;
 
-    public Cell(byte character, Color32? color = null) {
+    private Cell(byte character, Color32? color = null) {
         chr = character;
-        if (color is Color32 c) {
-            col = c;
+        col = color ?? Util.WHITE;
+    }
+
+    public Cell(char? c = null, Color32? color = null) {
+        if (c is char ch) {
+            byte[] data = BitFont.codePage.GetBytes(new char[] { ch });
+            Assert.AreEqual(data.Length, 1);
+            chr = data[0];
         } else {
-            col = new Color32(255, 255, 255, 255);
+            chr = (byte)' ';
         }
+        col = color ?? Util.WHITE;
+    }
+
+    public static Cell[] CreateArray(string text, Color32? color = null) {
+        byte[] bytes = BitFont.codePage.GetBytes(text);
+        Cell[] data = new Cell[bytes.Length];
+        for (int i = 0; i < bytes.Length; i++) {
+            data[i] = new Cell(bytes[i], color);
+        }
+        return data;
     }
 }
 
@@ -29,14 +46,18 @@ public class TermRenderer : MonoBehaviour {
     [SerializeField]
     private Material mat;
     private MeshRenderer rend;
+    private Mesh m = null;
 
+    // TODO hacky fix to upside down text
     private IEnumerable<(Vector2, Color32, byte)> Cells(float boundX, float boundY,
                                                         Cell[,] layout) {
-        for (int i = 0; i < layout.GetLength(1); i++) {
+        int iMax = layout.GetLength(1);
+        for (int i = 0; i < iMax; i++) {
             for (int j = 0; j < layout.GetLength(0); j++) {
                 float x = ((font.charWidth + pad) * j + pad) / boundX;
                 float y = ((font.charHeight + pad) * i + pad) / boundY;
-                Cell c = layout[j, i];
+                // Hack here
+                Cell c = layout[j, iMax - i - 1];
                 if (c.chr == (byte)' ')
                     continue;
                 yield return (new Vector2(x, y), c.col, c.chr);
@@ -54,8 +75,7 @@ public class TermRenderer : MonoBehaviour {
                             new Vector2(font.charWidth / boundX, font.charHeight / boundY), mesh);
     }
 
-    // Start is called before the first frame update
-    private void Start() {
+    private void Awake() {
         rend = GetComponent<MeshRenderer>();
 
         cmd = new CommandBuffer();
@@ -70,7 +90,8 @@ public class TermRenderer : MonoBehaviour {
             rend.material.SetTexture("_MainTex", tex);
             rend.material.SetTexture("_EmissionMap", tex);
         }
-        Mesh m = GenMesh(rX / 2f, rY / 2f, layout);
+        m?.Clear();
+        m = GenMesh(rX / 2f, rY / 2f, layout, m);
         cmd.Clear();
         cmd.SetRenderTarget(tex);
         cmd.ClearRenderTarget(true, true, Color.black);

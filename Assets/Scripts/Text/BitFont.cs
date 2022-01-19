@@ -15,13 +15,20 @@ public class BitFont : ScriptableObject {
     public int charWidth { get => (atlas.width - pad) >> 4; }
     public int charHeight { get => (atlas.height - pad) >> 4; }
     // Technically 1252 is correct but that is unavailable
-    public static readonly Encoding codePage = System.Text.Encoding.ASCII;
+    // Probably shouldn't be static
+    public static readonly Encoding codePage = GenerateEncoding();
     public Texture2D Atlas { get => atlas; }
 
     public BitFont(Texture2D fontAtlas, bool flipAtlasY = false) {
         atlas = fontAtlas;
         flipY = flipAtlasY;
         OnValidate();
+    }
+
+    private static Encoding GenerateEncoding() {
+        Encoding e = (Encoding)System.Text.Encoding.ASCII.Clone();
+        e.EncoderFallback = new EncoderReplacementFallback("\0");
+        return e;
     }
 
     private void OnValidate() {
