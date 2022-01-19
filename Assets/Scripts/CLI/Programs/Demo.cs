@@ -3,13 +3,18 @@ using System.Collections.Generic;
 
 public class Demo : Exe {
     private float step;
-    public Demo(float step = 1f / 20f, NodeFlags flags = NodeFlags.None) : base("demo", flags) {
+    private float duration;
+    public Demo(float step = 1f / 20f, float duration = 10f, NodeFlags flags = NodeFlags.None)
+        : base("demo", flags) {
         this.step = step;
+        this.duration = duration;
     }
 
     protected override IEnumerable<int?> Run(ProgData d) {
-        while (true) {
-            float t = Time.time;
+        float start = Time.time;
+        float t = start;
+        while (t - start < duration) {
+            t = Time.time;
             float n = ((float)d.sys.width - 1f) * (Mathf.Sin(t * 4f) / 2f + 0.5f);
             d.Println();
             for (float j = 0f; j < n; j++) {
@@ -17,5 +22,7 @@ public class Demo : Exe {
             }
             while (t + step > Time.time) yield return null;
         }
+        d.Println();
+        yield return 0;
     }
 }
