@@ -13,7 +13,7 @@ public class Demo : Exe {
     protected override IEnumerable<int?> Run(ProgAPI d) {
         float start = Time.time;
         float t = start;
-        while (t - start < duration) {
+        while (t - start < duration && !d.close) {
             t = Time.time;
             float n = ((float)d.sys.width - 1f) * (Mathf.Sin(t * 4f) / 2f + 0.5f);
             d.Println();

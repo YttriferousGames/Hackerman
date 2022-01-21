@@ -66,6 +66,21 @@ public class Sys : MonoBehaviour {
         }
     }
 
+    public T GetProgram<T>(string proc) where T: Exe {
+        Path pr = new Path(proc);
+        if (pr.nodes.Length == 1) {
+            foreach (Path p in sysPath) {
+                Path ex = pr.WithBase(p);
+                T exe = GetNode<T>(ex, true);
+                if (exe != null)
+                    return exe;
+            }
+            return null;
+        } else {
+            return GetNode<T>(pr, true);
+        }
+    }
+
     public Path CanonPath(Path path) {
         switch (path.pathType) {
             case PathType.Relative:

@@ -12,7 +12,7 @@ public class StarWars : Exe {
     }
 
     protected override IEnumerable<int?> Run(ProgAPI d) {
-        for (int f = 0; f < film.Length / (height + 1); f++) {
+        for (int f = 0; f >= 0 && f < film.Length / (height + 1); f++) {
             Cell[,] screen = new Cell[width, height];
             for (int l = 1; l < (height + 1); l++) {
                 string line = film[(height + 1) * f + l];
@@ -25,12 +25,20 @@ public class StarWars : Exe {
                     }
                 }
             }
-            d.SetScreen(screen);
+            d.Screen = screen;
 
             float delay = (float)int.Parse(film[(height + 1) * f]) * updateDelay;
             float targetTime = Time.time + delay;
-            while (targetTime > Time.time) yield return null;
+            while (targetTime > Time.time && f >= 0) {
+                if (d.close) {
+                    f = -1;
+                } else {
+                    yield return null;
+                }
+            }
+            if (f < 0) break;
         }
+        d.Screen = null;
         yield return 0;
     }
 }

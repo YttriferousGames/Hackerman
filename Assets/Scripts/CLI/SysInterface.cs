@@ -1,5 +1,4 @@
 // The glue between input and the Shell
-// TODO fairly pointless, could be removed if refactored
 
 using UnityEngine;
 
@@ -10,10 +9,15 @@ public class SysInterface : MonoBehaviour {
     private Prog sh;
     private TermRenderer rend;
 
-    public void HandleInput() {
-        string inp = Input.inputString.FixNewlines();
-        if (inp.Length > 0) {
-            sh.Input(inp);
+    public void HandleInput(bool handle) {
+        if (handle) {
+            string inp = Input.inputString.FixNewlines();
+            if (inp.Length > 0) {
+                sh.Input(inp);
+            }
+            if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.C)) {
+                sh.Close();
+            }
         }
     }
 
@@ -29,7 +33,7 @@ public class SysInterface : MonoBehaviour {
     }
 
     private void Start() {
-        Shell shell = (Shell)s.GetProgram("sh");
+        Shell shell = s.GetProgram<Shell>("sh");
         sh = shell.Start(s);
         sh.OnScreen += OnScreen;
         Update();

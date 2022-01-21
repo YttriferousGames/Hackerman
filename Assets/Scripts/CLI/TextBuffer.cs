@@ -3,9 +3,19 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using System;
 
+public interface TextOut {
+    int width { get; set; }
+    int height { get; set; }
+    void Print(string text, Color32? col = null);
+    void Println(string text = null, Color32? col = null);
+    // Very hacky, just to help with refactoring for now
+    [System.Obsolete]
+    void SetLine(string str, Color32? col = null);
+}
+
 // TODO might be nice if there was a "global" one per system so all programs can do cool stuff
 // It would have to be exposed in ProgData, which could be messy
-public class TextBuffer {
+public class TextBuffer : TextOut {
     public int width {
         get => _width;
         set {
@@ -18,7 +28,13 @@ public class TextBuffer {
             _needsRedraw = true;
         }
     }
-    public int height { get => _height; }
+    public int height {
+        get => _height;
+        set {
+            _height = value;
+            _needsRedraw = true;
+        }
+    }
     public bool needsRedraw { get => _needsRedraw; }
     private bool _needsRedraw = true;
     private int _width;
@@ -76,7 +92,7 @@ public class TextBuffer {
         Assert.IsTrue(IsBottom());
     }
 
-    public void Append(string str, Color32? col = null) {
+    public void Print(string str, Color32? col = null) {
         if (str.Length == 0) {
             return;
         }
@@ -108,6 +124,10 @@ public class TextBuffer {
         }
     }
 
+    public void Println(string text = null, Color32? col = null) {
+        Print(text != null ? text + '\n' : "\n", col);
+    }
+
     // Very hacky, just to help with refactoring for now
     [System.Obsolete]
     public void SetLine(string str, Color32? col = null) {
@@ -117,9 +137,9 @@ public class TextBuffer {
             if (IsBottom())
                 GotoBottom();
             SanityCheck();
-            Append('\n' + str, col);
+            Print('\n' + str, col);
         } else {
-            Append(str, col);
+            Print(str, col);
         }
     }
 

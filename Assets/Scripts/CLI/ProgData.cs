@@ -23,12 +23,19 @@ public class ProgData : Prog, ProgAPI {
     public string input { get => _input; }
     private string _input = "";
     // True if the program should be closed (CTRL+C)
-    public bool close { get => _close; }
+    public bool close { get => _close; set => _close = value; }
     private bool _close = false;
     private readonly List<(string, Color32)> output = new List<(string, Color32)>();
     // public (string, Color32)[] Output { get => output.ToArray(); }
     private Cell[,] screen;
-    // public Cell[,] Screen { get => screen; }
+    public Cell[,] Screen {
+        get => screen;
+        set {
+            screen = value;
+            fullscreen = screen != null;
+            OnScreen?.Invoke(screen);
+        }
+    }
     public Sys sys { get => _sys; }
     private readonly Sys _sys;
     // Whether the text output or fullscreen output is shown
@@ -79,13 +86,6 @@ public class ProgData : Prog, ProgAPI {
             Blankln();
     }
 
-    // Set to null to unset
-    public void SetScreen(Cell[,] screen) {
-        this.screen = screen;
-        fullscreen = screen != null;
-        OnScreen?.Invoke(screen);
-    }
-
     public void Close() {
         _close = true;
     }
@@ -111,14 +111,13 @@ public interface ProgAPI {
     string[] args { get; }
     string input { get; }
     // True if the program should be closed (CTRL+C)
-    bool close { get; }
+    bool close { get; set; }
     Sys sys { get; }
+    Cell[,] Screen { set; }
 
     void Print(string s, Color32? col = null);
 
     void Println(string s = null, Color32? col = null);
-
-    void SetScreen(Cell[,] screen);
 }
 
 public interface Prog {

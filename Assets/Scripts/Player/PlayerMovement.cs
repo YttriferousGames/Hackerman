@@ -62,10 +62,8 @@ public class PlayerMovement : MonoBehaviour {
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out h, 1f, 1 << 6,
                             QueryTriggerInteraction.Collide)) {
             SysInterface s = h.collider.gameObject.GetComponent<SysInterface>();
-            if (s != null) {
-                s.HandleInput();
-                handleInput = false;
-            }
+            s.HandleInput(s != null);
+            handleInput = s == null;
         }
 
         bool groundedPlayer = controller.isGrounded;

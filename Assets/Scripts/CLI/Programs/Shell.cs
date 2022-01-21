@@ -19,18 +19,10 @@ public class Shell : Exe {
         public Cell[,] screenOverride = null;
         public TextBuffer tb;
 
-        private void Print(string s, Color32? col = null) {
-            tb.Append(s, col);
-        }
-
         private void OnScreen(Cell[,] screen) {
             bool changed = screenOverride != screen;
             screenOverride = screen;
             needsRender = changed;
-        }
-
-        public void Println(string s = null, Color32? col = null) {
-            Print(s != null ? s + '\n' : "\n", col);
         }
 
         public Prog RunExe(ProgAPI d, string cmd) {
@@ -45,17 +37,17 @@ public class Shell : Exe {
             if (prog != null) {
                 try {
                     p = prog.Start(d.sys, args[1..]);
-                    p.OnOutput += (string s, Color32 col) => Print(s, col);
+                    p.OnOutput += (string s, Color32 col) => tb.Print(s, col);
                     p.OnScreen += OnScreen;
                     done = p.Update() != null;
                 } catch (System.Exception e) {
-                    Println(e.Message, Color.red);
+                    tb.Println(e.Message, Color.red);
                     UnityEngine.Debug.LogException(e);
                 }
             } else {
-                Print(args[0] + " is not a command (try ", Color.red);
-                Print("ls /bin/", Color.magenta);
-                Println(")", Color.red);
+                tb.Print(args[0] + " is not a command (try ", Color.red);
+                tb.Print("ls /bin/", Color.magenta);
+                tb.Println(")", Color.red);
             }
             if (done) {
                 ProgFinish();
@@ -66,12 +58,12 @@ public class Shell : Exe {
         }
 
         public void Motd() {
-            Println("[Alibaba Intelligence OS v0.1]", Color.cyan);
+            tb.Println("[Alibaba Intelligence OS v0.1]", Color.cyan);
             ProgFinish();
         }
 
         public void ProgFinish() {
-            Print("$ ", Color.green);
+            tb.Print("$ ", Color.green);
         }
 
         public ShellGuts() {
@@ -100,7 +92,7 @@ public class Shell : Exe {
                         guts.ProgFinish();
                     }
                 } catch (System.Exception e) {
-                    guts.Println(e.Message, Color.red);
+                    guts.tb.Println(e.Message, Color.red);
                     UnityEngine.Debug.LogException(e);
                 }
             } else if (d.input.Length > 0) {
@@ -113,18 +105,19 @@ public class Shell : Exe {
                         guts.tb.SetLine("$ " + guts.buffer, Color.green);
                     }
                     if (inp.Length > 1) {
-                        guts.Println();
+                        guts.tb.Println();
                         guts.current = guts.RunExe(d, guts.buffer);
                         guts.buffer = "";
                     }
                 }
             }
+            d.close = false;
             // TODO not quite right per se
             if (guts.tb.needsRedraw || guts.needsRender) {
                 if (guts.screenOverride == null) {
-                    d.SetScreen(guts.tb.Layout());
+                    d.Screen = guts.tb.Layout();
                 } else {
-                    d.SetScreen(guts.screenOverride);
+                    d.Screen = guts.screenOverride;
                 }
                 guts.needsRender = false;
             }
