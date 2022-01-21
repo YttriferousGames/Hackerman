@@ -36,7 +36,8 @@ public class StarWars : Exe {
                     yield return null;
                 }
             }
-            if (f < 0) break;
+            if (f < 0)
+                break;
         }
         d.Screen = null;
         yield return 0;

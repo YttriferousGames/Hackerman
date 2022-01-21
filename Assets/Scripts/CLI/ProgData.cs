@@ -23,7 +23,10 @@ public class ProgData : Prog, ProgAPI {
     public string input { get => _input; }
     private string _input = "";
     // True if the program should be closed (CTRL+C)
-    public bool close { get => _close; set => _close = value; }
+    public bool close {
+        get => _close;
+        set => _close = value;
+    }
     private bool _close = false;
     private readonly List<(string, Color32)> output = new List<(string, Color32)>();
     // public (string, Color32)[] Output { get => output.ToArray(); }

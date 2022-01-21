@@ -66,7 +66,8 @@ public class Sys : MonoBehaviour {
         }
     }
 
-    public T GetProgram<T>(string proc) where T: Exe {
+    public T GetProgram<T>(string proc)
+        where T : Exe {
         Path pr = new Path(proc);
         if (pr.nodes.Length == 1) {
             foreach (Path p in sysPath) {

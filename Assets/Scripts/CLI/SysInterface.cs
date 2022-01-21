@@ -8,6 +8,9 @@ public class SysInterface : MonoBehaviour {
     private Sys s;
     private Prog sh;
     private TermRenderer rend;
+    [SerializeField]
+    private AudioClip status;
+    private AudioSource player = null;
 
     public void HandleInput(bool handle) {
         if (handle) {
@@ -15,8 +18,10 @@ public class SysInterface : MonoBehaviour {
             if (inp.Length > 0) {
                 sh.Input(inp);
             }
-            if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.C)) {
+            if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) &&
+                Input.GetKeyDown(KeyCode.C)) {
                 sh.Close();
+                PlayAudio(status);
             }
         }
     }
@@ -30,6 +35,7 @@ public class SysInterface : MonoBehaviour {
     private void Awake() {
         s = GetComponent<Sys>();
         rend = GetComponent<TermRenderer>();
+        player = GetComponent<AudioSource>();
     }
 
     private void Start() {
@@ -37,6 +43,12 @@ public class SysInterface : MonoBehaviour {
         sh = shell.Start(s);
         sh.OnScreen += OnScreen;
         Update();
+    }
+
+    private void PlayAudio(AudioClip c) {
+        if (player != null && c != null) {
+            player.PlayOneShot(c);
+        }
     }
 
     // Update is called once per frame
