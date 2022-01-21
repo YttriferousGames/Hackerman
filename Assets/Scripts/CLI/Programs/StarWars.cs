@@ -11,7 +11,7 @@ public class StarWars : Exe {
         this.film = data.text.SplitNewlines();
     }
 
-    protected override IEnumerable<int?> Run(ProgData d) {
+    protected override IEnumerable<int?> Run(ProgAPI d) {
         for (int f = 0; f < film.Length / (height + 1); f++) {
             Cell[,] screen = new Cell[width, height];
             for (int l = 1; l < (height + 1); l++) {

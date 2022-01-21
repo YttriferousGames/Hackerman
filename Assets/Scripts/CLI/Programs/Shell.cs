@@ -33,7 +33,7 @@ public class Shell : Exe {
             Print(s != null ? s + '\n' : "\n", col);
         }
 
-        public Prog RunExe(ProgData d, string cmd) {
+        public Prog RunExe(ProgAPI d, string cmd) {
             string[] args = cmd.Split(' ');
             Exe prog = d.sys.GetProgram(args[0]);
             if (prog is Shell s) {
@@ -86,7 +86,7 @@ public class Shell : Exe {
         return regex.Replace(s, "").Replace("\b", "");
     }
 
-    protected override IEnumerable<int?> Run(ProgData d) {
+    protected override IEnumerable<int?> Run(ProgAPI d) {
         ShellGuts guts = new ShellGuts();
         guts.Motd();
         while (true) {

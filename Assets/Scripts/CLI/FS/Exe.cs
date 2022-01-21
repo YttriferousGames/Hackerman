@@ -12,10 +12,10 @@ public abstract class Exe : File {
         : base(name, "", flags | NodeFlags.ReadOnly) {}
 
     // Coroutine for a program (should run every frame until an int is returned, ending it)
-    protected abstract IEnumerable<int?> Run(ProgData d);
+    public delegate IEnumerable<int?> RunFunc(ProgAPI d);
+    protected abstract IEnumerable<int?> Run(ProgAPI d);
 
     public Prog Start(Sys s, string[] args = null) {
-        ProgData d = new ProgData(s, args);
-        return new Prog(d, Run(d));
+        return new ProgData(s, Run, args);
     }
 }

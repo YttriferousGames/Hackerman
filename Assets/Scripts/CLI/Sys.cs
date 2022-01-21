@@ -4,11 +4,8 @@ using System;
 using UnityEngine;
 using System.Linq;
 
-// TODO layered FS where files are added/removed/modified as game progresses, per PC.
-// There's the problem of mutability, perhaps I can make things read only
-// Remember to support communication between systems and fancy stuff
+// TODO Remember to support communication between systems and fancy stuff
 
-// TODO contains state of a system
 public class Sys : MonoBehaviour {
     public readonly Path[] sysPath = { "/bin" };
 

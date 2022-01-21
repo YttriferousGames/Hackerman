@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class External : Exe {
     public External(string proc, NodeFlags flags = NodeFlags.None) : base(proc, flags) {}
 
-    protected override IEnumerable<int?> Run(ProgData d) {
+    protected override IEnumerable<int?> Run(ProgAPI d) {
         Process proc = new Process();
         proc.StartInfo.FileName = Name;
         proc.StartInfo.Arguments = String.Join(' ', d.args);

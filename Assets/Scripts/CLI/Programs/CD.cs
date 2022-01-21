@@ -3,7 +3,7 @@ using System.Collections.Generic;
 public class CD : Exe {
     public CD(NodeFlags flags = NodeFlags.None) : base("cd", flags) {}
 
-    protected override IEnumerable<int?> Run(ProgData d) {
+    protected override IEnumerable<int?> Run(ProgAPI d) {
         if (d.args.Length == 0) {
             yield return 0;
         } else if (d.args.Length > 1) {

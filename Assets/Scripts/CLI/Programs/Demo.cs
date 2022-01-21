@@ -10,7 +10,7 @@ public class Demo : Exe {
         this.duration = duration;
     }
 
-    protected override IEnumerable<int?> Run(ProgData d) {
+    protected override IEnumerable<int?> Run(ProgAPI d) {
         float start = Time.time;
         float t = start;
         while (t - start < duration) {

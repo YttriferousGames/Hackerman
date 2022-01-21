@@ -3,7 +3,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
-// TODO
+// TODO layered FS where files are added/removed/modified as game progresses, per PC.
+// There's the problem of mutability, perhaps I can make things read only
 // Should I keep FSLayer immutable?
 // Should I merge the layers in the creation of this?
 // idk

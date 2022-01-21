@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class LS : Exe {
     public LS(NodeFlags flags = NodeFlags.None) : base("ls", flags) {}
 
-    private void ListPath(ProgData d, Path p, bool name = false) {
+    private void ListPath(ProgAPI d, Path p, bool name = false) {
         Node n = d.sys.GetNode(p);
         if (n is Dir dir) {
             if (name)
@@ -18,7 +18,7 @@ public class LS : Exe {
         }
     }
 
-    protected override IEnumerable<int?> Run(ProgData d) {
+    protected override IEnumerable<int?> Run(ProgAPI d) {
         if (d.args.Length == 0) {
             ListPath(d, d.sys.workingDir);
         } else if (d.args.Length == 1) {
