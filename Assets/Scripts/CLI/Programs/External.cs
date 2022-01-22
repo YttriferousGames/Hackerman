@@ -22,11 +22,11 @@ public class External : Exe {
         proc.StartInfo.UseShellExecute = false;
         proc.OutputDataReceived += new DataReceivedEventHandler((sender, e) => {
             if (e.Data != null)
-                d.Println(e.Data);
+                d.Out.Println(e.Data);
         });
         proc.ErrorDataReceived += new DataReceivedEventHandler((sender, e) => {
             if (e.Data != null)
-                d.Println(e.Data);
+                d.Out.Println(e.Data);
         });
         proc.Start();
         proc.BeginOutputReadLine();

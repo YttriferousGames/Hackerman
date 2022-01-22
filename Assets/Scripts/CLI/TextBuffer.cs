@@ -4,6 +4,8 @@ using UnityEngine.Assertions;
 using System;
 
 public interface TextOut {
+    public const int DEFAULT_WIDTH = 40;
+    public const int DEFAULT_HEIGHT = 18;
     int width { get; set; }
     int height { get; set; }
     void Print(string text, Color32? col = null);
@@ -11,6 +13,7 @@ public interface TextOut {
     // Very hacky, just to help with refactoring for now
     [System.Obsolete]
     void SetLine(string str, Color32? col = null);
+    Cell[,] ScreenOverride { get; set; }
 }
 
 // TODO might be nice if there was a "global" one per system so all programs can do cool stuff
@@ -19,6 +22,8 @@ public class TextBuffer : TextOut {
     public int width {
         get => _width;
         set {
+            if (_width == value)
+                return;
             _width = value;
             screenLines = recalcScreenLines();
             int lines = Lines(currentLine);
@@ -31,14 +36,16 @@ public class TextBuffer : TextOut {
     public int height {
         get => _height;
         set {
+            if (_height == value)
+                return;
             _height = value;
             _needsRedraw = true;
         }
     }
     public bool needsRedraw { get => _needsRedraw; }
     private bool _needsRedraw = true;
-    private int _width;
-    private int _height;
+    private int _width = TextOut.DEFAULT_WIDTH;
+    private int _height = TextOut.DEFAULT_HEIGHT;
     // Scroll is relative to top, that is, 0 = first line
     // This line will be displayed at bottom of screen (assuming screen is full)
 
@@ -80,6 +87,8 @@ public class TextBuffer : TextOut {
         this._height = height;
         buf = new List<Cell[]>();
     }
+
+    public TextBuffer() : this(TextOut.DEFAULT_WIDTH, TextOut.DEFAULT_HEIGHT) {}
 
     public bool IsBottom() {
         return (textScroll + 1 >= textLines || textLines == 0) &&
@@ -145,6 +154,11 @@ public class TextBuffer : TextOut {
 
     // Simplify the crud
     public Cell[,] Layout(bool drawCursor = true) {
+        // TODO how can I support cursor? Is it needed?
+        if (_screen != null) {
+            _needsRedraw = false;
+            return _screen;
+        }
         Cell[,] o = new Cell[width, height];
         if (screenLines <= height) {
             // Ignore scroll, draw from top
@@ -187,4 +201,40 @@ public class TextBuffer : TextOut {
         _needsRedraw = false;
         return o;
     }
+
+    Cell[,] _screen = null;
+    public Cell[,] ScreenOverride {
+        get => _screen;
+        set {
+            _needsRedraw = true;
+            _screen = value;
+        }
+    }
+}
+
+public class DevNull : TextOut {
+    private int _width = TextOut.DEFAULT_WIDTH;
+    private int _height = TextOut.DEFAULT_HEIGHT;
+    public int width {
+        get => _width;
+        set => _width = value;
+    }
+    public int height {
+        get => _height;
+        set => _height = value;
+    }
+    private Cell[,] _screen = null;
+    public Cell[,] ScreenOverride {
+        get => _screen;
+        set => _screen = value;
+    }
+    public void Print(string text, Color32? col = null) {}
+    public void Println(string text = null, Color32? col = null) {}
+    [System.Obsolete]
+    public void SetLine(string str, Color32? col = null) {}
+    public DevNull(int w, int h) {
+        _width = w;
+        _height = h;
+    }
+    public DevNull() : this(TextOut.DEFAULT_WIDTH, TextOut.DEFAULT_HEIGHT) {}
 }

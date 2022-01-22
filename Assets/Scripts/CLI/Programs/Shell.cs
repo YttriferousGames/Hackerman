@@ -12,20 +12,8 @@ public class Shell : Exe {
     private class ShellGuts {
         public Prog current = null;
         public string buffer = "";
-
-        public int width = 40;
-        public int height = 18;
-        public bool needsRender = true;
-        public Cell[,] screenOverride = null;
-        public TextBuffer tb;
-
-        private void OnScreen(Cell[,] screen) {
-            bool changed = screenOverride != screen;
-            screenOverride = screen;
-            needsRender = changed;
-        }
-
-        public Prog RunExe(ProgAPI d, string cmd) {
+        public ProgAPI d = null;
+        public Prog RunExe(string cmd) {
             string[] args = cmd.Split(' ');
             Exe prog = d.sys.GetProgram(args[0]);
             if (prog is Shell s) {
@@ -36,18 +24,16 @@ public class Shell : Exe {
             bool done = true;
             if (prog != null) {
                 try {
-                    p = prog.Start(d.sys, args[1..]);
-                    p.OnOutput += (string s, Color32 col) => tb.Print(s, col);
-                    p.OnScreen += OnScreen;
+                    p = prog.Start(d.sys, d.Out, args[1..]);
                     done = p.Update() != null;
                 } catch (System.Exception e) {
-                    tb.Println(e.Message, Color.red);
+                    d.Out.Println(e.Message, Color.red);
                     UnityEngine.Debug.LogException(e);
                 }
             } else {
-                tb.Print(args[0] + " is not a command (try ", Color.red);
-                tb.Print("ls /bin/", Color.magenta);
-                tb.Println(")", Color.red);
+                d.Out.Print(args[0] + " is not a command (try ", Color.red);
+                d.Out.Print("ls /bin/", Color.magenta);
+                d.Out.Println(")", Color.red);
             }
             if (done) {
                 ProgFinish();
@@ -58,16 +44,17 @@ public class Shell : Exe {
         }
 
         public void Motd() {
-            tb.Println("[Alibaba Intelligence OS v0.1]", Color.cyan);
+            d.Out.Println("[Alibaba Intelligence OS v0.1]", Color.cyan);
             ProgFinish();
         }
 
         public void ProgFinish() {
-            tb.Print("$ ", Color.green);
+            d.Out.ScreenOverride = null;
+            d.Out.Print("$ ", Color.green);
         }
 
-        public ShellGuts() {
-            tb = new TextBuffer(width, height);
+        public ShellGuts(ProgAPI d) {
+            this.d = d;
         }
     }
 
@@ -79,7 +66,7 @@ public class Shell : Exe {
     }
 
     protected override IEnumerable<int?> Run(ProgAPI d) {
-        ShellGuts guts = new ShellGuts();
+        ShellGuts guts = new ShellGuts(d);
         guts.Motd();
         while (true) {
             if (guts.current != null) {
@@ -92,7 +79,7 @@ public class Shell : Exe {
                         guts.ProgFinish();
                     }
                 } catch (System.Exception e) {
-                    guts.tb.Println(e.Message, Color.red);
+                    d.Out.Println(e.Message, Color.red);
                     UnityEngine.Debug.LogException(e);
                 }
             } else if (d.input.Length > 0) {
@@ -102,25 +89,16 @@ public class Shell : Exe {
                         guts.buffer += inp[0];
                         guts.buffer = FixBackspace(guts.buffer);
                         // JANK
-                        guts.tb.SetLine("$ " + guts.buffer, Color.green);
+                        d.Out.SetLine("$ " + guts.buffer, Color.green);
                     }
                     if (inp.Length > 1) {
-                        guts.tb.Println();
-                        guts.current = guts.RunExe(d, guts.buffer);
+                        d.Out.Println();
+                        guts.current = guts.RunExe(guts.buffer);
                         guts.buffer = "";
                     }
                 }
             }
             d.close = false;
-            // TODO not quite right per se
-            if (guts.tb.needsRedraw || guts.needsRender) {
-                if (guts.screenOverride == null) {
-                    d.Screen = guts.tb.Layout();
-                } else {
-                    d.Screen = guts.screenOverride;
-                }
-                guts.needsRender = false;
-            }
             yield return null;
         }
     }

@@ -9,9 +9,9 @@ public class Cat : Exe {
             // TODO helper method to get symlinks too
             // Handle nested symlinks to depth etc
             if (f != null) {
-                d.Println(f.Contents);
+                d.Out.Println(f.Contents);
             } else {
-                d.Println("cat: " + s + ": is not a file");
+                d.Out.Println("cat: " + s + ": is not a file");
                 yield return 1;
                 yield break;
             }

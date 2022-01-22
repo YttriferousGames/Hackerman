@@ -7,6 +7,11 @@ public class SysInterface : MonoBehaviour {
     // Start is called before the first frame update
     private Sys s;
     private Prog sh;
+    [SerializeField]
+    private int width = TextOut.DEFAULT_WIDTH;
+    [SerializeField]
+    private int height = TextOut.DEFAULT_HEIGHT;
+    private TextBuffer tb = new TextBuffer(TextOut.DEFAULT_WIDTH, TextOut.DEFAULT_HEIGHT);
     private TermRenderer rend;
     [SerializeField]
     private AudioClip status;
@@ -26,12 +31,6 @@ public class SysInterface : MonoBehaviour {
         }
     }
 
-    void OnScreen(Cell[,] screen) {
-        if (screen != null) {
-            rend.Render(screen);
-        }
-    }
-
     private void Awake() {
         s = GetComponent<Sys>();
         rend = GetComponent<TermRenderer>();
@@ -40,8 +39,7 @@ public class SysInterface : MonoBehaviour {
 
     private void Start() {
         Shell shell = s.GetProgram<Shell>("sh");
-        sh = shell.Start(s);
-        sh.OnScreen += OnScreen;
+        sh = shell.Start(s, tb);
         Update();
     }
 
@@ -53,6 +51,11 @@ public class SysInterface : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        tb.width = width;
+        tb.height = height;
         sh.Update();
+        if (tb.needsRedraw) {
+            rend.Render(tb.Layout());
+        }
     }
 }

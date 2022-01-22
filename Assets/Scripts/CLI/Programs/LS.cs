@@ -9,12 +9,12 @@ public class LS : Exe {
         Node n = d.sys.GetNode(p);
         if (n is Dir dir) {
             if (name)
-                d.Println(p.ToString() + ":");
-            d.Println(String.Join(
+                d.Out.Println(p.ToString() + ":");
+            d.Out.Println(String.Join(
                 ' ',
                 dir.Contents.Where(n => !n.flags.HasFlag(NodeFlags.Hidden)).Select(n => n.Name)));
         } else {
-            d.Println(n.Name);
+            d.Out.Println(n.Name);
         }
     }
 
@@ -27,7 +27,7 @@ public class LS : Exe {
             foreach (string s in d.args) {
                 Path p = d.sys.CanonPath(s);
                 ListPath(d, p, true);
-                d.Println();
+                d.Out.Println();
             }
         }
         yield return 0;

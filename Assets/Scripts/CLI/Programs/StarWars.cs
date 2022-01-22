@@ -25,7 +25,7 @@ public class StarWars : Exe {
                     }
                 }
             }
-            d.Screen = screen;
+            d.Out.ScreenOverride = screen;
 
             float delay = (float)int.Parse(film[(height + 1) * f]) * updateDelay;
             float targetTime = Time.time + delay;
@@ -39,7 +39,7 @@ public class StarWars : Exe {
             if (f < 0)
                 break;
         }
-        d.Screen = null;
+        d.Out.ScreenOverride = null;
         yield return 0;
     }
 }

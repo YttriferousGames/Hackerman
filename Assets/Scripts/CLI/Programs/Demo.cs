@@ -15,14 +15,14 @@ public class Demo : Exe {
         float t = start;
         while (t - start < duration && !d.close) {
             t = Time.time;
-            float n = ((float)d.sys.width - 1f) * (Mathf.Sin(t * 4f) / 2f + 0.5f);
-            d.Println();
+            float n = ((float)d.Out.width - 1f) * (Mathf.Sin(t * 4f) / 2f + 0.5f);
+            d.Out.Println();
             for (float j = 0f; j < n; j++) {
-                d.Print("#", new Color(n / 10, j / n, 0.8f));
+                d.Out.Print("#", new Color(n / 10, j / n, 0.8f));
             }
             while (t + step > Time.time) yield return null;
         }
-        d.Println();
+        d.Out.Println();
         yield return 0;
     }
 }

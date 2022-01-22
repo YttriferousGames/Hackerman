@@ -13,10 +13,6 @@ public class Sys : MonoBehaviour {
     private FSLayerName[] layers = new FSLayerName[] { FSLayerName.Base };
     private FS fs;
 
-    // TODO expose dimensions in a logical way
-    [System.Obsolete]
-    public readonly int width = 40;
-
     public readonly Path home = "/home/geff/";
     public Path workingDir = "/home/geff/";
 

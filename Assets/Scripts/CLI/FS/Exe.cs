@@ -15,7 +15,7 @@ public abstract class Exe : File {
     public delegate IEnumerable<int?> RunFunc(ProgAPI d);
     protected abstract IEnumerable<int?> Run(ProgAPI d);
 
-    public Prog Start(Sys s, string[] args = null) {
-        return new ProgData(s, Run, args);
+    public Prog Start(Sys s, TextOut o, string[] args = null) {
+        return new ProgData(s, o, Run, args);
     }
 }

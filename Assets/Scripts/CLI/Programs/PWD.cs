@@ -5,10 +5,10 @@ public class PWD : Exe {
 
     protected override IEnumerable<int?> Run(ProgAPI d) {
         if (d.args.Length > 0) {
-            d.Println("pwd: too many arguments");
+            d.Out.Println("pwd: too many arguments");
             yield return 1;
         }
-        d.Println(d.sys.workingDir.ToString());
+        d.Out.Println(d.sys.workingDir.ToString());
         yield return 0;
     }
 }
