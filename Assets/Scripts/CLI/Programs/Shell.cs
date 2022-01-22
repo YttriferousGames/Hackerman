@@ -1,8 +1,5 @@
 using UnityEngine;
-using UnityEngine.Assertions;
-using System;
 using System.Collections.Generic;
-
 using System.Text.RegularExpressions;
 
 // TODO dispense with the pile of hacks

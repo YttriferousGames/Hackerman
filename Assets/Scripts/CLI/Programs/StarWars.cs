@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.Assertions;
-using System;
 using System.Collections.Generic;
 
 /// <summary>Star Wars from asciimation.co.nz</summary>

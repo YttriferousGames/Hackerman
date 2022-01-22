@@ -55,13 +55,13 @@ public class TextBuffer : TextOut {
     // Scroll is relative to top, that is, 0 = first line
     // This line will be displayed at bottom of screen (assuming screen is full)
 
-    // Number of text lines scrolled down
+    /// <summary>Number of text lines scrolled down</summary>
     private int textScroll = 0;
-    // Number of screen lines offset from textScroll
+    /// <summary>Number of screen lines offset from textScroll</summary>
     private int screenScroll = 0;
-    // Total number of text lines
+    /// <summary>Total number of text lines</summary>
     private int textLines { get => buf.Count; }
-    // Total number of screen lines
+    /// <summary>Total number of screen lines</summary>
     private int screenLines = 1;
     private Cell[] currentLine {
         get => textScroll < buf.Count ? buf[textScroll] : null;
@@ -143,7 +143,6 @@ public class TextBuffer : TextOut {
         Print(text != null ? text + '\n' : "\n", col);
     }
 
-    // Very hacky, just to help with refactoring for now
     public void SetLine(string str, Color32? col = null) {
         if (buf.Count > 0) {
             screenLines -= Lines(buf[buf.Count - 1]);
@@ -157,7 +156,7 @@ public class TextBuffer : TextOut {
         }
     }
 
-    // Simplify the crud
+    // TODO Simplify the crud
     /// <summary>Returns the current state of the screen</summary>
     public Cell[,] Layout(bool drawCursor = true) {
         // TODO how can I support cursor? Is it needed?

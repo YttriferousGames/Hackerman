@@ -1,7 +1,4 @@
-using UnityEngine;
-using UnityEngine.Assertions;
 using System;
-using System.Collections.Generic;
 
 /// <summary>Different properties a Node can have</summary>
 [Flags]

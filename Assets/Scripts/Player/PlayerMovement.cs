@@ -1,7 +1,4 @@
 using UnityEngine;
-using UnityEngine.Assertions;
-using System;
-using System.Collections.Generic;
 
 /// <summary>Player movement and interaction</summary>
 [RequireComponent(typeof(CharacterController))]
@@ -34,7 +31,6 @@ public class PlayerMovement : MonoBehaviour {
         return angle - 360 * Mathf.Floor(angle / 360);
     }
 
-    // Update is called once per frame
     private void Update() {
         if (Input.GetKey(KeyCode.Escape)) {
             Cursor.lockState = CursorLockMode.None;

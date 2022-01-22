@@ -1,8 +1,5 @@
 using UnityEngine;
-using UnityEngine.Assertions;
-using System;
 using System.Collections.Generic;
-
 using UnityEngine.SceneManagement;
 using System.Linq;
 
@@ -11,7 +8,7 @@ public class LevelStreamer : MonoBehaviour {
     [SerializeField]
     private PlayerMovement player;
     private CharacterController cc;
-    // First buildId of a level scene
+    /// <summary>First buildId of a level scene</summary>
     private int firstLevelId = 3;
 
     private IEnumerable<Scene> scenesIter {
@@ -38,7 +35,6 @@ public class LevelStreamer : MonoBehaviour {
         }
     }
 
-    // Update is called once per frame
     private void UpdateStreaming() {
         Scene[] scenes = scenesIter.OrderBy(s => s.buildIndex).ToArray();
         Scene? minLevelLoaded = null; Scene? minLevelInside = null; Scene? maxLevelLoaded = null;
@@ -76,27 +72,25 @@ public class LevelStreamer : MonoBehaviour {
                         maxLevelInside = s;
                     }
                 }
+            } if (maxLevelInside is Scene maxLI &&
+                  maxLI.buildIndex == maxLevelLoaded.Value.buildIndex &&
+                  maxLI.buildIndex + 1 < SceneManager.sceneCountInBuildSettings) {
+                int s = maxLI.buildIndex + 1;
+                UnityEngine.Debug.Log("Loading scene ID " + s.ToString());
+                SceneManager.LoadSceneAsync(s, LoadSceneMode.Additive);
+            } if (minLevelInside is Scene minLI &&
+                  minLI.buildIndex == minLevelLoaded.Value.buildIndex &&
+                  minLI.buildIndex > firstLevelId) {
+                int s = minLI.buildIndex - 1;
+                UnityEngine.Debug.Log("Loading scene ID " + s.ToString());
+                SceneManager.LoadSceneAsync(s, LoadSceneMode.Additive);
+            } foreach (Scene s in scenes) {
+                if (s.isLoaded && (s.buildIndex < minLevelInside.Value.buildIndex - 1 ||
+                                   s.buildIndex > maxLevelInside.Value.buildIndex + 1)) {
+                    UnityEngine.Debug.Log("Unloading scene ID " + s.buildIndex.ToString());
+                    SceneManager.UnloadSceneAsync(s);
+                }
             }
-        // UnityEngine.Debug.Log(minLevelLoaded.Value.name + "," + minLevelInside.Value.name + "," +
-        // maxLevelLoaded.Value.name + "," + maxLevelInside.Value.name);
-        if (maxLevelInside is Scene maxLI && maxLI.buildIndex == maxLevelLoaded.Value.buildIndex &&
-            maxLI.buildIndex + 1 < SceneManager.sceneCountInBuildSettings) {
-            int s = maxLI.buildIndex + 1;
-            UnityEngine.Debug.Log("Loading scene ID " + s.ToString());
-            SceneManager.LoadSceneAsync(s, LoadSceneMode.Additive);
-        } if (minLevelInside is Scene minLI &&
-              minLI.buildIndex == minLevelLoaded.Value.buildIndex &&
-              minLI.buildIndex > firstLevelId) {
-            int s = minLI.buildIndex - 1;
-            UnityEngine.Debug.Log("Loading scene ID " + s.ToString());
-            SceneManager.LoadSceneAsync(s, LoadSceneMode.Additive);
-        } foreach (Scene s in scenes) {
-            if (s.isLoaded && (s.buildIndex < minLevelInside.Value.buildIndex - 1 ||
-                               s.buildIndex > maxLevelInside.Value.buildIndex + 1)) {
-                UnityEngine.Debug.Log("Unloading scene ID " + s.buildIndex.ToString());
-                SceneManager.UnloadSceneAsync(s);
-            }
-        }
     }
 
     private void Update() {

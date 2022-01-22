@@ -1,9 +1,4 @@
 using UnityEngine;
-using UnityEngine.Assertions;
-using System;
-using System.Collections.Generic;
-
-// TODO this is an awkward workaround to using a ScriptableObject properly
 
 /// <summary>Possible names of layers</summary>
 public enum FSLayerName {
@@ -11,6 +6,7 @@ public enum FSLayerName {
     EasterEggs,
 }
 
+// TODO this is an awkward workaround to using a ScriptableObject properly
 /// <summary>Contains the FS state of all layers to be combined for different system
 /// configurations</summary>
 public static class FSLayers {

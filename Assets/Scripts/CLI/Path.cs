@@ -1,15 +1,12 @@
-using UnityEngine;
-using UnityEngine.Assertions;
 using System;
 using System.Collections.Generic;
-
 using System.Linq;
 
 /// <summary>Type of path (relative or absolute)</summary>
 public enum PathType {
-    // Relative to /
+    /// <summary>Relative to /</summary>
     Absolute,
-    // Relative to ./
+    /// <summary>Relative to ./</summary>
     Relative,
 }
 

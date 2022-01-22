@@ -1,6 +1,3 @@
-using UnityEngine;
-using UnityEngine.Assertions;
-using System;
 using System.Collections.Generic;
 
 /// <summary>Print working directory</summary>

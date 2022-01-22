@@ -1,11 +1,8 @@
-using UnityEngine;
-using UnityEngine.Assertions;
+#if UNITY_STANDALONE
 using System;
 using System.Collections.Generic;
-
 using System.Diagnostics;
 
-#if UNITY_STANDALONE
 // Security risk? yes.
 // Fun? ye
 /// <summary>Wraps an actual system program so it can be used in the game</summary>

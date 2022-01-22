@@ -1,6 +1,3 @@
-using UnityEngine;
-using UnityEngine.Assertions;
-using System;
 using System.Collections.Generic;
 
 // TODO Things to redesign:
@@ -18,7 +15,6 @@ public class ProgData : Prog, ProgAPI {
     private readonly string[] _args;
     public string input { get => _input; }
     private string _input = "";
-    // True if the program should be closed (CTRL+C)
     public bool close {
         get => _close;
         set => _close = value;

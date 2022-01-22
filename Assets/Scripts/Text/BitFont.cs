@@ -1,8 +1,6 @@
 using UnityEngine;
-using UnityEngine.Assertions;
 using System;
 using System.Collections.Generic;
-
 using System.Text;
 
 /// <summary>Contains font data as used in 3D text/terminal</summary>
