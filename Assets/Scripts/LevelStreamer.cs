@@ -1,8 +1,6 @@
 // Controls streaming of level data in background (no loading screens!)
 
-using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
 using System.Linq;
 
 public class LevelStreamer : MonoBehaviour {

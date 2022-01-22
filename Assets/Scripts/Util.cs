@@ -1,4 +1,7 @@
-using UnityEngine;
+global using UnityEngine;
+global using UnityEngine.Assertions;
+global using System;
+global using System.Collections.Generic;
 
 public static class Util {
     public static readonly string[] NEWLINES = new string[] { "\r\n", "\r", "\n" };

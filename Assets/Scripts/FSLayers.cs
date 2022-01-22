@@ -1,8 +1,6 @@
 // Contains the FS state of all layers
 // to be combined for different system configurations
 
-using UnityEngine;
-
 public enum FSLayerName {
     Base,
     EasterEggs,

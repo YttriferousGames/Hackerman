@@ -1,6 +1,5 @@
 // Directory node (contains nodes)
 
-using System.Collections.Generic;
 using System.Linq;
 
 public class Dir : Node {

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 public class CD : Exe {
     public CD(NodeFlags flags = NodeFlags.None) : base("cd", flags) {}
 

@@ -1,6 +1,3 @@
-using UnityEngine;
-using System.Collections.Generic;
-
 public class Demo : Exe {
     private float step;
     private float duration;

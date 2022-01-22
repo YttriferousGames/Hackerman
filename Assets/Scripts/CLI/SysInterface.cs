@@ -1,7 +1,5 @@
 // The glue between input and the Shell
 
-using UnityEngine;
-
 [RequireComponent(typeof(Sys), typeof(TermRenderer))]
 public class SysInterface : MonoBehaviour {
     // Start is called before the first frame update

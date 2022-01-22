@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 public class Cat : Exe {
     public Cat(NodeFlags flags = NodeFlags.None) : base("cat", flags) {}
 

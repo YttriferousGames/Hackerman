@@ -1,9 +1,5 @@
 // The shell of the computer (the commandline you run commands at)
 
-using System;
-using System.Linq;
-using UnityEngine;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 // TODO dispense with the pile of hacks

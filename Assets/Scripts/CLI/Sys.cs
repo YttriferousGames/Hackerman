@@ -1,7 +1,5 @@
 // The state of each individual computer
 
-using System;
-using UnityEngine;
 using System.Linq;
 
 // TODO Remember to support communication between systems and fancy stuff

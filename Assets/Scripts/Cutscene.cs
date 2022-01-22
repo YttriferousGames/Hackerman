@@ -1,6 +1,5 @@
 // Transitions to next scene after video is complete
 
-using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.SceneManagement;
 

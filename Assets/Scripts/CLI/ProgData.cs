@@ -1,8 +1,5 @@
 // Contains the state provided to a program being executed
 
-using UnityEngine;
-using System.Collections.Generic;
-
 // Things to redesign:
 // - Input handling
 //   - Consider a program that uses arrow keys, mouse input etc

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 public class PWD : Exe {
     public PWD(NodeFlags flags = NodeFlags.None) : base("pwd", flags) {}
 

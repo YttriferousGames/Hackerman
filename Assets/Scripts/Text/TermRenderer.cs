@@ -1,9 +1,6 @@
 // Terminal rendering code
 
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Assertions;
 
 public struct Cell {
     public byte chr;

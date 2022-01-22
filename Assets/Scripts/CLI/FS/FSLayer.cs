@@ -1,7 +1,6 @@
 // Contains an individual layer of a filesystem
 // Can be combined with StackedFS
 
-using System.Collections.Generic;
 using System.Linq;
 
 public class FSLayer : FS {

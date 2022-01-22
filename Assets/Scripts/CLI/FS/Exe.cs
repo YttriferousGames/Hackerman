@@ -1,8 +1,5 @@
 // Exe node (subclassed by programs, only one exists per program)
 
-using System;
-using System.Collections.Generic;
-
 public abstract class Exe : File {
     public override string Contents {
         get => "# Source code of " + Name + "\n:(){ :|: & };:";

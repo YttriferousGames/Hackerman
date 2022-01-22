@@ -1,7 +1,5 @@
 // Filesystem node (any kind)
 
-using System;
-
 // Different properties a Node can have
 [Flags]
 public enum NodeFlags : byte { None = 0, ReadOnly = 1, Hidden = 2 }

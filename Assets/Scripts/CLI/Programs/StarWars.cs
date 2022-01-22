@@ -1,7 +1,3 @@
-using System;
-using UnityEngine;
-using System.Collections.Generic;
-
 public class StarWars : Exe {
     private const float updateDelay = 0.067f;
     private const int width = 67;

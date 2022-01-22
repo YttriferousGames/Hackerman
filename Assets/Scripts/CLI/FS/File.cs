@@ -1,7 +1,5 @@
 // File node (stores text contents)
 
-using UnityEngine;
-
 public class File : Node {
     private string _contents;
     public virtual string Contents {

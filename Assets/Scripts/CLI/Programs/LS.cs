@@ -1,6 +1,4 @@
-using System;
 using System.Linq;
-using System.Collections.Generic;
 
 public class LS : Exe {
     public LS(NodeFlags flags = NodeFlags.None) : base("ls", flags) {}

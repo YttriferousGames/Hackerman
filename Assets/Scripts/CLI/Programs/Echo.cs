@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 public class Echo : Exe {
     public Echo(NodeFlags flags = NodeFlags.None) : base("echo", flags) {}
 

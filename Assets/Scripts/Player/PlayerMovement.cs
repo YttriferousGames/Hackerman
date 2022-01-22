@@ -1,7 +1,5 @@
 // Player movement and interaction
 
-using UnityEngine;
-
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour {
     private CharacterController controller;

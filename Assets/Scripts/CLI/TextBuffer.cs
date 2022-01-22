@@ -1,8 +1,3 @@
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Assertions;
-using System;
-
 public interface TextOut {
     public const int DEFAULT_WIDTH = 40;
     public const int DEFAULT_HEIGHT = 18;
