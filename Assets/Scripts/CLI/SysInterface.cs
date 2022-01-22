@@ -1,3 +1,8 @@
+using UnityEngine;
+using UnityEngine.Assertions;
+using System;
+using System.Collections.Generic;
+
 /// <summary>The glue between input and the Shell</summary>
 [RequireComponent(typeof(Sys), typeof(TermRenderer))]
 public class SysInterface : MonoBehaviour {

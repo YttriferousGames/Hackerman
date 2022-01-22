@@ -1,3 +1,8 @@
+using UnityEngine;
+using UnityEngine.Assertions;
+using System;
+using System.Collections.Generic;
+
 /// <summary>Concatenate files and print them</summary>
 public class Cat : Exe {
     public Cat(NodeFlags flags = NodeFlags.None) : base("cat", flags) {}

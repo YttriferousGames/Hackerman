@@ -1,3 +1,8 @@
+using UnityEngine;
+using UnityEngine.Assertions;
+using System;
+using System.Collections.Generic;
+
 /// <summary>Exe node (subclassed by programs, only one exists per program)</summary>
 public abstract class Exe : File {
     public override string Contents {

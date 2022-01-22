@@ -1,3 +1,8 @@
+using UnityEngine;
+using UnityEngine.Assertions;
+using System;
+using System.Collections.Generic;
+
 /// <summary>Player movement and interaction</summary>
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour {

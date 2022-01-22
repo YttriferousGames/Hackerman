@@ -1,3 +1,8 @@
+using UnityEngine;
+using UnityEngine.Assertions;
+using System;
+using System.Collections.Generic;
+
 // TODO Things to redesign:
 // - Input handling
 //   - Consider a program that uses arrow keys, mouse input etc

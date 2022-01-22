@@ -1,3 +1,8 @@
+using UnityEngine;
+using UnityEngine.Assertions;
+using System;
+using System.Collections.Generic;
+
 /// <summary>Print working directory</summary>
 public class PWD : Exe {
     public PWD(NodeFlags flags = NodeFlags.None) : base("pwd", flags) {}

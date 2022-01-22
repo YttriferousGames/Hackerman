@@ -1,3 +1,8 @@
+using UnityEngine;
+using UnityEngine.Assertions;
+using System;
+using System.Collections.Generic;
+
 using System.Linq;
 
 /// <summary>Contains an individual layer of a filesystem (can be combined with StackedFS)</summary>

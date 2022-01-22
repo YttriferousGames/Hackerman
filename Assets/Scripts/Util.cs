@@ -1,7 +1,7 @@
-global using UnityEngine;
-global using UnityEngine.Assertions;
-global using System;
-global using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Assertions;
+using System;
+using System.Collections.Generic;
 
 /// <summary>Misc. utility code for use throughout the game</summary>
 public static class Util {

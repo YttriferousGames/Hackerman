@@ -1,3 +1,8 @@
+using UnityEngine;
+using UnityEngine.Assertions;
+using System;
+using System.Collections.Generic;
+
 /// <summary>Different properties a Node can have</summary>
 [Flags]
 public enum NodeFlags : byte { None = 0, ReadOnly = 1, Hidden = 2 }

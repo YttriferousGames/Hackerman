@@ -1,3 +1,8 @@
+using UnityEngine;
+using UnityEngine.Assertions;
+using System;
+using System.Collections.Generic;
+
 // TODO this is an awkward workaround to using a ScriptableObject properly
 
 /// <summary>Possible names of layers</summary>

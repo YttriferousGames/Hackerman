@@ -1,3 +1,8 @@
+using UnityEngine;
+using UnityEngine.Assertions;
+using System;
+using System.Collections.Generic;
+
 /// <summary>Interface with methods used in terminal output</summary>
 public interface TextOut {
     public const int DEFAULT_WIDTH = 40;

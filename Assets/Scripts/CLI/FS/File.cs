@@ -1,3 +1,8 @@
+using UnityEngine;
+using UnityEngine.Assertions;
+using System;
+using System.Collections.Generic;
+
 /// <summary>File node (stores text contents)</summary>
 public class File : Node {
     private string _contents;

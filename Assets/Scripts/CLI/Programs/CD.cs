@@ -1,3 +1,8 @@
+using UnityEngine;
+using UnityEngine.Assertions;
+using System;
+using System.Collections.Generic;
+
 /// <summary>Changes directory</summary>
 public class CD : Exe {
     public CD(NodeFlags flags = NodeFlags.None) : base("cd", flags) {}

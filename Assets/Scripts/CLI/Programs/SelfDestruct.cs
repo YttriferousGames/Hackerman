@@ -1,3 +1,8 @@
+using UnityEngine;
+using UnityEngine.Assertions;
+using System;
+using System.Collections.Generic;
+
 /// <summary>Activates particle system when run</summary>
 public class SelfDestruct : Exe {
     public SelfDestruct() : base("selfdestruct") {}

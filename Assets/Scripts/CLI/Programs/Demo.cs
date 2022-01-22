@@ -1,3 +1,8 @@
+using UnityEngine;
+using UnityEngine.Assertions;
+using System;
+using System.Collections.Generic;
+
 /// <summary>Rainbow sine wave demo</summary>
 public class Demo : Exe {
     private float step;

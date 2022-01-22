@@ -1,3 +1,8 @@
+using UnityEngine;
+using UnityEngine.Assertions;
+using System;
+using System.Collections.Generic;
+
 using System.Linq;
 
 /// <summary>Type of path (relative or absolute)</summary>
