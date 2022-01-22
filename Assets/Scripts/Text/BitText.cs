@@ -1,26 +1,31 @@
-// 3D text code
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
+/// <summary>Horizontal alignment</summary>
 public enum HAlign {
     LJustified,
     CJustified,
     RJustified,
 }
 
+/// <summary>3D text object</summary>
 #if UNITY_EDITOR
 [ExecuteInEditMode]
 #endif
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class BitText : MonoBehaviour {
+    /// <summary>Font used</summary>
     public BitFont font;
+    /// <summary>Color of text</summary>
     public Color col = Color.white;
+    /// <summary>Text rendered</summary>
     [Multiline]
     public string text = "Hello, world!";
     public HAlign horizontalAlignment = HAlign.LJustified;
+    /// <summary>Size multiplier of text</summary>
     public float size = 1f;
+    /// <summary>Padding between each character</summary>
     public Vector2 pad = new Vector2(0.25f, 0.25f);
     private bool includePad = true;
     private static string materialName = "Assets/Materials/Text/Text.mat";
@@ -67,7 +72,7 @@ public class BitText : MonoBehaviour {
         UpdateMesh();
     }
 
-    // Call whenever modifying values
+    /// <summary>Call whenever modifying values</summary>
     public void UpdateMesh() {
         if (this != null && mf != null) {
             mf.sharedMesh = GenMesh();

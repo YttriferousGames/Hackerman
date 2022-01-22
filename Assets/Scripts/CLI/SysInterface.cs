@@ -1,8 +1,6 @@
-// The glue between input and the Shell
-
+/// <summary>The glue between input and the Shell</summary>
 [RequireComponent(typeof(Sys), typeof(TermRenderer))]
 public class SysInterface : MonoBehaviour {
-    // Start is called before the first frame update
     private Sys s;
     private Prog sh;
     [SerializeField]
@@ -15,6 +13,7 @@ public class SysInterface : MonoBehaviour {
     private AudioClip status;
     private AudioSource player = null;
 
+    /// <summary>Should be called to handle system input</summary>
     public void HandleInput(bool handle) {
         if (handle) {
             string inp = Input.inputString.FixNewlines();
@@ -48,7 +47,7 @@ public class SysInterface : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    private void Update() {
         tb.width = width;
         tb.height = height;
         sh.Update();

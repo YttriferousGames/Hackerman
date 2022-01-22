@@ -3,6 +3,7 @@ using System.Diagnostics;
 #if UNITY_STANDALONE
 // Security risk? yes.
 // Fun? ye
+/// <summary>Wraps an actual system program so it can be used in the game</summary>
 public class External : Exe {
     public External(string proc, NodeFlags flags = NodeFlags.None) : base(proc, flags) {}
 

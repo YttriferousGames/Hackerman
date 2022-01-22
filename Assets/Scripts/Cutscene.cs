@@ -1,8 +1,7 @@
-// Transitions to next scene after video is complete
-
 using UnityEngine.Video;
 using UnityEngine.SceneManagement;
 
+/// <summary>Transitions to next scene after video is complete</summary>
 [RequireComponent(typeof(VideoPlayer))]
 public class Cutscene : MonoBehaviour {
     private VideoPlayer vp;

@@ -1,5 +1,4 @@
-// Player movement and interaction
-
+/// <summary>Player movement and interaction</summary>
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour {
     private CharacterController controller;

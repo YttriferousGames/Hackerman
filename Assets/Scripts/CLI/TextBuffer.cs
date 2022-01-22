@@ -1,18 +1,23 @@
+/// <summary>Interface with methods used in terminal output</summary>
 public interface TextOut {
     public const int DEFAULT_WIDTH = 40;
     public const int DEFAULT_HEIGHT = 18;
+    /// <summary>The width of the output (in cells)</summary>
     int width { get; set; }
+    /// <summary>The height of the output (in cells)</summary>
     int height { get; set; }
+    /// <summary>Prints the provided text with the specified color</summary>
     void Print(string text, Color32? col = null);
+    /// <summary>Prints the provided text with the specified color, followed by a newline</summary>
     void Println(string text = null, Color32? col = null);
-    // Very hacky, just to help with refactoring for now
+    // TODO Very hacky, just to help with refactoring for now
     [System.Obsolete]
     void SetLine(string str, Color32? col = null);
+    /// <summary>Override for the screen being output (or null)</summary>
     Cell[,] ScreenOverride { get; set; }
 }
 
-// TODO might be nice if there was a "global" one per system so all programs can do cool stuff
-// It would have to be exposed in ProgData, which could be messy
+/// <summary>Arranges text to layout used on screen</summary>
 public class TextBuffer : TextOut {
     public int width {
         get => _width;
@@ -37,6 +42,7 @@ public class TextBuffer : TextOut {
             _needsRedraw = true;
         }
     }
+    /// <summary>True if the contents have changed since the last time </summary>
     public bool needsRedraw { get => _needsRedraw; }
     private bool _needsRedraw = true;
     private int _width = TextOut.DEFAULT_WIDTH;
@@ -85,12 +91,12 @@ public class TextBuffer : TextOut {
 
     public TextBuffer() : this(TextOut.DEFAULT_WIDTH, TextOut.DEFAULT_HEIGHT) {}
 
-    public bool IsBottom() {
+    private bool IsBottom() {
         return (textScroll + 1 >= textLines || textLines == 0) &&
                screenScroll + 1 >= Lines(currentLine);
     }
 
-    public void GotoBottom() {
+    private void GotoBottom() {
         textScroll = textLines == 0 ? 0 : textLines - 1;
         screenScroll = Lines(currentLine) - 1;
         Assert.IsTrue(IsBottom());
@@ -133,7 +139,6 @@ public class TextBuffer : TextOut {
     }
 
     // Very hacky, just to help with refactoring for now
-    [System.Obsolete]
     public void SetLine(string str, Color32? col = null) {
         if (buf.Count > 0) {
             screenLines -= Lines(buf[buf.Count - 1]);
@@ -148,6 +153,7 @@ public class TextBuffer : TextOut {
     }
 
     // Simplify the crud
+    /// <summary>Returns the current state of the screen</summary>
     public Cell[,] Layout(bool drawCursor = true) {
         // TODO how can I support cursor? Is it needed?
         if (_screen != null) {
@@ -197,7 +203,7 @@ public class TextBuffer : TextOut {
         return o;
     }
 
-    Cell[,] _screen = null;
+    private Cell[,] _screen = null;
     public Cell[,] ScreenOverride {
         get => _screen;
         set {
@@ -207,6 +213,7 @@ public class TextBuffer : TextOut {
     }
 }
 
+/// <summary>A "dummy" implementation of <see cref="TextOut"/> that does nothing</summary>
 public class DevNull : TextOut {
     private int _width = TextOut.DEFAULT_WIDTH;
     private int _height = TextOut.DEFAULT_HEIGHT;
@@ -225,7 +232,6 @@ public class DevNull : TextOut {
     }
     public void Print(string text, Color32? col = null) {}
     public void Println(string text = null, Color32? col = null) {}
-    [System.Obsolete]
     public void SetLine(string str, Color32? col = null) {}
     public DevNull(int w, int h) {
         _width = w;

@@ -1,9 +1,8 @@
-// The shell of the computer (the commandline you run commands at)
-
 using System.Text.RegularExpressions;
 
 // TODO dispense with the pile of hacks
 // Get this done the RIGHT way
+/// <summary>The shell of the computer (the CLI you use to run commands)</summary>
 public class Shell : Exe {
     private class ShellGuts {
         public Prog current = null;

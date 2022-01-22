@@ -1,13 +1,13 @@
-// Contains the FS state of all layers
-// to be combined for different system configurations
+// TODO this is an awkward workaround to using a ScriptableObject properly
 
+/// <summary>Possible names of layers</summary>
 public enum FSLayerName {
     Base,
     EasterEggs,
 }
 
-// This stuff would be cool to put in a ScriptableObject, but it's a real pain in the ass
-// So for now, this will do fine.
+/// <summary>Contains the FS state of all layers to be combined for different system
+/// configurations</summary>
 public static class FSLayers {
     private static readonly FSLayer Base = new FSLayer(
         new Node[] { new Dir("bin",

@@ -1,8 +1,7 @@
-// Controls streaming of level data in background (no loading screens!)
-
 using UnityEngine.SceneManagement;
 using System.Linq;
 
+/// <summary>Controls streaming of level data in background (no loading screens!)</summary>
 public class LevelStreamer : MonoBehaviour {
     [SerializeField]
     private PlayerMovement player;

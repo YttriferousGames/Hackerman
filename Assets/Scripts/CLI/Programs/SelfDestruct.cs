@@ -1,3 +1,4 @@
+/// <summary>Activates particle system when run</summary>
 public class SelfDestruct : Exe {
     public SelfDestruct() : base("selfdestruct") {}
     protected override IEnumerable<int?> Run(ProgAPI d) {

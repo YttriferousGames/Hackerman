@@ -1,3 +1,4 @@
+/// <summary>Rainbow sine wave demo</summary>
 public class Demo : Exe {
     private float step;
     private float duration;

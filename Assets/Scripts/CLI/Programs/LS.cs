@@ -1,5 +1,6 @@
 using System.Linq;
 
+/// <summary>File listing</summary>
 public class LS : Exe {
     public LS(NodeFlags flags = NodeFlags.None) : base("ls", flags) {}
 

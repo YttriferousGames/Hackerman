@@ -1,7 +1,6 @@
-// Utilities for manipulating paths
-
 using System.Linq;
 
+/// <summary>Type of path (relative or absolute)</summary>
 public enum PathType {
     // Relative to /
     Absolute,
@@ -10,12 +9,15 @@ public enum PathType {
 }
 
 // TODO only support absolute paths and disambiguify in the constructor (based on context)
+/// <summary>Represents a path to a node on a system</summary>
 public class Path {
+    /// <summary>Array of node names (e.g <c>{"usr", "bin", "foo"}</c>)</summary>
     public readonly string[] nodes;
     public readonly PathType pathType = PathType.Relative;
 
     public static implicit operator Path(string path) => new Path(path);
 
+    /// <summary>Converts back into a string</summary>
     public override string ToString() {
         string p;
         switch (pathType) {
@@ -73,7 +75,7 @@ public class Path {
         pathType = p.pathType;
     }
 
-    // Add currentDirectory to the start of Path
+    /// <summary>Adds a base to the start of a path</summary>
     public Path WithBase(Path currentDir) {
         if (pathType != PathType.Absolute) {
             return new Path(currentDir.nodes.Concat(nodes).ToArray(), currentDir.pathType);

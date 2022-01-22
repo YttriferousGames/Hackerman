@@ -1,3 +1,4 @@
+/// <summary>Concatenate files and print them</summary>
 public class Cat : Exe {
     public Cat(NodeFlags flags = NodeFlags.None) : base("cat", flags) {}
 
@@ -9,7 +10,7 @@ public class Cat : Exe {
             if (f != null) {
                 d.Out.Println(f.Contents);
             } else {
-                d.Out.Println("cat: " + s + ": is not a file");
+                d.Out.Println("cat: " + s + " is not a file");
                 yield return 1;
                 yield break;
             }

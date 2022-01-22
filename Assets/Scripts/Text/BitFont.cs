@@ -1,7 +1,6 @@
-// Contains font data as used in 3D text/terminal
-
 using System.Text;
 
+/// <summary>Contains font data as used in 3D text/terminal</summary>
 [CreateAssetMenu(fileName = "NewBitFont", menuName = "BitFont", order = 1)]
 public class BitFont : ScriptableObject {
     [SerializeField]
@@ -9,11 +8,16 @@ public class BitFont : ScriptableObject {
     [SerializeField]
     private bool flipY = false;
     private const int pad = 16 * 2;
+    /// <summary>Width of character (in pixels)</summary>
     public int charWidth { get => (atlas.width - pad) >> 4; }
+    /// <summary>Height of character (in pixels)</summary>
     public int charHeight { get => (atlas.height - pad) >> 4; }
     // Technically 1252 is correct but that is unavailable
-    // Probably shouldn't be static
+    // Static because text data should be interoperable between fonts
+    // It might be worth just storing Cells as chars if Unicode support is added
+    /// <summary>Character encoding of font</summary>
     public static readonly Encoding codePage = GenerateEncoding();
+    /// <summary>Texture atlas of font</summary>
     public Texture2D Atlas { get => atlas; }
 
     public BitFont(Texture2D fontAtlas, bool flipAtlasY = false) {
@@ -35,7 +39,7 @@ public class BitFont : ScriptableObject {
         }
     }
 
-    // Gets pixel coordinates of specific character
+    /// <summary>Gets pixel coordinates of specific character</summary>
     private ((int, int), (int, int)) GetCharBounds(byte c, bool includePad = false) {
         int w, h, x, y;
         if (includePad) {
@@ -57,7 +61,7 @@ public class BitFont : ScriptableObject {
         Graphics.CopyTexture(atlas, 0, 0, srcX, srcY, charWidth, charHeight, dst, 0, 0, dstX, dstY);
     }
 
-    // Gets UV coordinates of specific character
+    /// <summary>Gets UV coordinates of specific character</summary>
     private ((float, float), (float, float)) GetCharUV(byte c, bool includePad) {
         float w = atlas.width;
         float h = atlas.height;
@@ -65,6 +69,7 @@ public class BitFont : ScriptableObject {
         return ((a / w, b / h), (x / w, y / h));
     }
 
+    /// <summary>Generates mesh of text from generator of cell positions</summary>
     public Mesh GenMesh(IEnumerable<(Vector2, Color32, byte)> chars, Vector2 size, Mesh m = null,
                         bool pad = false) {
         List<Vector3> verts = new List<Vector3>();

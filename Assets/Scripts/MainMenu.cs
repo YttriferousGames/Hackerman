@@ -1,8 +1,7 @@
-// Controls buttons on Main Menu and loading to next scene
-
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Camera))]
+/// <summary>Controls buttons on Main Menu and loading to next scene</summary>
 public class MainMenu : MonoBehaviour {
     private Camera cam;
     [SerializeField]

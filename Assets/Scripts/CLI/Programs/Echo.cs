@@ -1,3 +1,4 @@
+/// <summary>Echoes arguments to the screen</summary>
 public class Echo : Exe {
     public Echo(NodeFlags flags = NodeFlags.None) : base("echo", flags) {}
 

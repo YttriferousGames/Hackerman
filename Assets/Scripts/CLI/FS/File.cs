@@ -1,7 +1,7 @@
-// File node (stores text contents)
-
+/// <summary>File node (stores text contents)</summary>
 public class File : Node {
     private string _contents;
+    /// <summary>Text contents of file</summary>
     public virtual string Contents {
         get => _contents;
         set {

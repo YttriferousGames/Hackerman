@@ -1,6 +1,4 @@
-// Contains the state provided to a program being executed
-
-// Things to redesign:
+// TODO Things to redesign:
 // - Input handling
 //   - Consider a program that uses arrow keys, mouse input etc
 //   - Remember mouse input should also be usable to highlight screen contents
@@ -9,6 +7,7 @@
 //   - Helper methods to get mouse in screen coords etc
 //   - There should still be an easy way to just "readline" stuff
 
+/// <summary>Contains the state of a program being executed</summary>
 public class ProgData : Prog, ProgAPI {
     public string[] args { get => _args; }
     private readonly string[] _args;
@@ -36,7 +35,6 @@ public class ProgData : Prog, ProgAPI {
         _close = true;
     }
 
-    // This is pretty inadequate
     public void Input(string inp) {
         _input += inp;
     }
@@ -53,20 +51,29 @@ public class ProgData : Prog, ProgAPI {
     }
 }
 
+/// <summary>API provided to programs as they execute</summary>
 public interface ProgAPI {
+    /// <summary>Arguments provided to a program</summary>
     string[] args { get; }
+    /// <summary>Input provided to program during frame</summary>
     string input { get; }
-    // True if the program should be closed (CTRL+C)
+    /// <summary>True if the program should be closed (CTRL+C)</summary>
     bool close { get; set; }
+    /// <summary>The system the program is run on</summary>
     Sys sys { get; }
+    /// <summary>Terminal output</summary>
     TextOut Out { get; }
 }
 
+/// <summary>API for interacting with a program</summary>
 public interface Prog {
+    /// <summary>Request the program to close</summary>
     void Close();
 
-    // This is pretty inadequate
+    // TODO This is pretty inadequate
+    /// <summary>Provide input to the program on this frame</summary>
     void Input(string inp);
 
+    /// <summary>Run the program for a frame</summary>
     int? Update();
 }

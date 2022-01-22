@@ -1,11 +1,10 @@
-// Contains an individual layer of a filesystem
-// Can be combined with StackedFS
-
 using System.Linq;
 
+/// <summary>Contains an individual layer of a filesystem (can be combined with StackedFS)</summary>
 public class FSLayer : FS {
     private List<Node> root;
 
+    /// <summary>Returns node at path</summary>
     public override Node GetNode(Path path) {
         Node current = new Dir("", root);
         foreach (string n in path.nodes) {

@@ -1,8 +1,8 @@
-// Directory node (contains nodes)
-
 using System.Linq;
 
+/// <summary>Directory node (contains nodes)</summary>
 public class Dir : Node {
+    /// <summary>Child nodes</summary>
     public List<Node> Contents;
 
     // TODO propagate ReadOnly

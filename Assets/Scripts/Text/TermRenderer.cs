@@ -1,9 +1,10 @@
-// Terminal rendering code
-
 using UnityEngine.Rendering;
 
+/// <summary>Data of a single character/grid cell rendered</summary>
 public struct Cell {
+    /// <summary>The encoded value of the character</summary>
     public byte chr;
+    /// <summary>Color the character is rendered as</summary>
     public Color32 col;
 
     private Cell(byte character, Color32? color = null) {
@@ -22,6 +23,7 @@ public struct Cell {
         col = color ?? Util.WHITE;
     }
 
+    /// <summary>Creates an array of <see cref="Cell"/>s from a string</summary>
     public static Cell[] CreateArray(string text, Color32? color = null) {
         byte[] bytes = BitFont.codePage.GetBytes(text);
         Cell[] data = new Cell[bytes.Length];
@@ -32,10 +34,12 @@ public struct Cell {
     }
 }
 
+/// <summary>Terminal rendering code</summary>
 [RequireComponent(typeof(MeshRenderer))]
 public class TermRenderer : MonoBehaviour {
+    /// <summary>Font used for drawing to the screen</summary>
     public BitFont font;
-    // Space between each character when drawn to screen (px)
+    /// <summary>Space between each character when drawn to screen (px)</summary>
     public int pad = 1;
 
     private RenderTexture tex = null;
@@ -78,6 +82,7 @@ public class TermRenderer : MonoBehaviour {
         cmd = new CommandBuffer();
     }
 
+    /// <summary>Draws terminal contents to <see cref="RenderTexture"/></summary>
     public void Render(Cell[,] layout) {
         (int rX, int rY) = TexRes(layout);
         if (tex == null || tex.width != rX || tex.height != rY) {
