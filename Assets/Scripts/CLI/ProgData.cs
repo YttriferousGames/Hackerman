@@ -7,7 +7,8 @@ using System.Collections.Generic;
 //   - And all that custom input should only be done when it's explicitly allowed to (and when PC is
 //   focused)
 //   - Helper methods to get mouse in screen coords etc
-//   - There should still be an easy way to just "readline" stuff
+//   - There should be an easy way to just "readline" stuff - that is, a "readline" function that
+//   does all the work for you
 
 /// <summary>Contains the state of a program being executed</summary>
 public class ProgData : Prog, ProgAPI {

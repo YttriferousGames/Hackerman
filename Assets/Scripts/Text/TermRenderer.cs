@@ -85,6 +85,7 @@ public class TermRenderer : MonoBehaviour {
         cmd = new CommandBuffer();
     }
 
+    // TODO allow output to MeshFilter
     /// <summary>Draws terminal contents to <see cref="RenderTexture"/></summary>
     public void Render(Cell[,] layout) {
         (int rX, int rY) = TexRes(layout);

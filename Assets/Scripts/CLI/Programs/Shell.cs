@@ -2,56 +2,93 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-// TODO dispense with the pile of hacks
-// Get this done the RIGHT way
 /// <summary>The shell of the computer (the CLI you use to run commands)</summary>
 public class Shell : Exe {
     private class ShellGuts {
-        public Prog current = null;
-        public string buffer = "";
-        public ProgAPI d = null;
-        public Prog RunExe(string cmd) {
-            string[] args = cmd.Split(' ');
-            Exe prog = d.sys.GetProgram(args[0]);
-            if (prog is Shell s) {
-                Motd();
-                return null;
+        private List<string> history = new List<string>();
+        private Prog current = null;
+        private string buffer = "";
+
+        public bool UpdateProg(ProgAPI d) {
+            if (current != null) {
+                try {
+                    current.Input(d.input);
+                    if (d.close)
+                        current.Close();
+                    if (current.Update() != null) {
+                        current = null;
+                        ProgFinish(d);
+                    } else {
+                        return true;
+                    }
+                } catch (System.Exception e) {
+                    PrintError(d, e);
+                }
             }
-            Prog p = null;
-            bool done = true;
+            return false;
+        }
+
+        private Prog RunExe(ProgAPI d, string cmd) {
+            history.Add(cmd);
+            string[] args = cmd.Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
+            Exe prog = null;
+            if (args.Length > 0) {
+                prog = d.sys.GetProgram(args[0]);
+                if (prog is Shell s) {
+                    Motd(d);
+                    return null;
+                }
+            }
             if (prog != null) {
+                Prog p = null;
                 try {
                     p = prog.Start(d.sys, d.Out, args[1..]);
-                    done = p.Update() != null;
+                    if (p.Update() != null)
+                        p = null;
                 } catch (System.Exception e) {
-                    d.Out.Println(e.Message, Color.red);
-                    UnityEngine.Debug.LogException(e);
+                    PrintError(d, e);
                 }
-            } else {
+                if (p != null)
+                    return p;
+            } else if (args.Length > 0) {
                 d.Out.Print(args[0] + " is not a command (try ", Color.red);
                 d.Out.Print("ls /bin/", Color.magenta);
                 d.Out.Println(")", Color.red);
             }
-            if (done) {
-                ProgFinish();
-                return null;
-            } else {
-                return p;
+            ProgFinish(d);
+            return null;
+        }
+
+        public void HandleInput(ProgAPI d) {
+            string[] inp = d.input.SplitNewlines();
+            if (inp.Length > 0) {
+                if (inp[0].Length > 0) {
+                    buffer += inp[0];
+                    buffer = FixBackspace(buffer);
+                    // JANK
+                    d.Out.SetLine("$ " + buffer, Color.green);
+                }
+                if (inp.Length > 1) {
+                    d.Out.Println();
+                    current = RunExe(d, buffer);
+                    buffer = "";
+                }
             }
         }
 
-        public void Motd() {
+        public static void Motd(ProgAPI d) {
             d.Out.Println("[Alibaba Intelligence OS v0.1]", Color.cyan);
-            ProgFinish();
+            ProgFinish(d);
         }
 
-        public void ProgFinish() {
+        private static void ProgFinish(ProgAPI d) {
             d.Out.ScreenOverride = null;
             d.Out.Print("$ ", Color.green);
         }
 
-        public ShellGuts(ProgAPI d) {
-            this.d = d;
+        private static void PrintError(ProgAPI d, System.Exception e) {
+            UnityEngine.Debug.LogException(e);
+            d.Out.Println(e.GetType().Name + ": " + e.Message, Color.red);
         }
     }
 
@@ -63,37 +100,12 @@ public class Shell : Exe {
     }
 
     protected override IEnumerable<int?> Run(ProgAPI d) {
-        ShellGuts guts = new ShellGuts(d);
-        guts.Motd();
+        ShellGuts guts = new ShellGuts();
+        ShellGuts.Motd(d);
         while (true) {
-            if (guts.current != null) {
-                try {
-                    guts.current.Input(d.input);
-                    if (d.close)
-                        guts.current.Close();
-                    if (guts.current.Update() != null) {
-                        guts.current = null;
-                        guts.ProgFinish();
-                    }
-                } catch (System.Exception e) {
-                    d.Out.Println(e.Message, Color.red);
-                    UnityEngine.Debug.LogException(e);
-                }
-            } else if (d.input.Length > 0) {
-                string[] inp = d.input.SplitNewlines();
-                if (inp.Length > 0) {
-                    if (inp[0].Length > 0) {
-                        guts.buffer += inp[0];
-                        guts.buffer = FixBackspace(guts.buffer);
-                        // JANK
-                        d.Out.SetLine("$ " + guts.buffer, Color.green);
-                    }
-                    if (inp.Length > 1) {
-                        d.Out.Println();
-                        guts.current = guts.RunExe(guts.buffer);
-                        guts.buffer = "";
-                    }
-                }
+            bool progRunning = guts.UpdateProg(d);
+            if (!progRunning && d.input.Length > 0) {
+                guts.HandleInput(d);
             }
             d.close = false;
             yield return null;

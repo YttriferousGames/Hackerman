@@ -3,6 +3,8 @@ using UnityEngine.Assertions;
 using System;
 using System.Collections.Generic;
 
+// TODO API for drawing cursor, textures to screen
+// TODO expose scroll, zoom as things that can be done in game
 /// <summary>Interface with methods used in terminal output</summary>
 public interface TextOut {
     public const int DEFAULT_WIDTH = 40;
@@ -22,6 +24,7 @@ public interface TextOut {
     Cell[,] ScreenOverride { get; set; }
 }
 
+// TODO simplify and optimize
 /// <summary>Arranges text to layout used on screen</summary>
 public class TextBuffer : TextOut {
     public int width {
@@ -156,7 +159,6 @@ public class TextBuffer : TextOut {
         }
     }
 
-    // TODO Simplify the crud
     /// <summary>Returns the current state of the screen</summary>
     public Cell[,] Layout(bool drawCursor = true) {
         // TODO how can I support cursor? Is it needed?
