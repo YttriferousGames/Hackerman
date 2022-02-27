@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 /// <summary>Controls buttons on Main Menu and loading to next scene</summary>
 [RequireComponent(typeof(Camera))]
@@ -26,7 +27,7 @@ public class MainMenu : MonoBehaviour {
 
     // TODO loading screen by loading scene async
     private void Update() {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
         RaycastHit hitInfo;
         cursor.col = new Color(0f, 1f, 0f, Mathf.Sin(2f * Time.time) / 2f + 0.5f);
         play_bt.col = Color.green;
@@ -34,12 +35,12 @@ public class MainMenu : MonoBehaviour {
         if (Physics.Raycast(ray, out hitInfo, 10f, 1 << 5, QueryTriggerInteraction.Collide)) {
             if (hitInfo.collider.gameObject == play) {
                 play_bt.col = Color.white;
-                if (Input.GetMouseButton(0))
+                if (Mouse.current.leftButton.isPressed)
                     LoadScene();
             } else if (hitInfo.collider.gameObject == quit) {
                 BitText bt = quit.GetComponent<BitText>();
                 quit_bt.col = Color.white;
-                if (Input.GetMouseButton(0))
+                if (Mouse.current.leftButton.isPressed)
 #if UNITY_EDITOR
                     UnityEditor.EditorApplication.isPlaying = false;
 #else

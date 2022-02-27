@@ -41,6 +41,7 @@ public static class FSLayers {
 #endif
                         new Demo(flags: NodeFlags.Hidden),
                         new StarWars(Resources.Load<TextAsset>("starwars"), NodeFlags.Hidden),
+                        new Noclip(NodeFlags.Hidden),
                 }),
     });
 

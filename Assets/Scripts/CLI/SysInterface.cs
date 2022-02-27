@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>The glue between input and the Shell</summary>
 [RequireComponent(typeof(Sys), typeof(TermRenderer))]
@@ -15,6 +16,7 @@ public class SysInterface : MonoBehaviour {
     [SerializeField]
     private AudioClip status;
     private AudioSource player = null;
+    private bool handle = false;
 
     private void Zoom(int step) {
         bool shouldMul = step < 0;
@@ -32,29 +34,9 @@ public class SysInterface : MonoBehaviour {
         height = tb.height;
     }
 
-    // TODO this code should be moved into respective programs
     /// <summary>Should be called to handle system input</summary>
     public void HandleInput(bool handle) {
-        if (handle) {
-            if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))) {
-                if (Input.GetKeyDown(KeyCode.C)) {
-                    sh.Close();
-                    PlayAudio(status);
-                    return;
-                } else if (Input.GetKeyDown(KeyCode.Equals)) {
-                    Zoom(1);
-                    return;
-                } else if (Input.GetKeyDown(KeyCode.Minus)) {
-                    Zoom(-1);
-                    return;
-                }
-            }
-            int scroll = (int)(Input.mouseScrollDelta.y * 0.1f);
-            string inp = Input.inputString.FixNewlines();
-            if (inp.Length > 0) {
-                sh.Input(inp);
-            }
-        }
+        this.handle = handle;
     }
 
     private void Awake() {
@@ -76,11 +58,30 @@ public class SysInterface : MonoBehaviour {
     }
 
     private void Update() {
+        sh.canInput =
+            handle && !Keyboard.current.ctrlKey.isPressed && !Keyboard.current.altKey.isPressed;
+        // TODO this code should be moved into respective programs
+        if (handle) {
+            if (Keyboard.current.ctrlKey.isPressed) {
+                if (Keyboard.current.cKey.wasPressedThisFrame) {
+                    sh.Close();
+                    PlayAudio(status);
+                    return;
+                } else if (Keyboard.current.equalsKey.wasPressedThisFrame) {
+                    Zoom(1);
+                    return;
+                } else if (Keyboard.current.minusKey.wasPressedThisFrame) {
+                    Zoom(-1);
+                    return;
+                }
+            }
+        }
         tb.width = width;
         tb.height = height;
         sh.Update();
         if (tb.needsRedraw) {
             rend.Render(tb.Layout());
         }
+        handle = false;
     }
 }

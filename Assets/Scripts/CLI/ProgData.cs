@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
+using UnityEngine;
 
 // TODO Things to redesign:
 // - Input handling
@@ -14,8 +16,6 @@ using System.Collections.Generic;
 public class ProgData : Prog, ProgAPI {
     public string[] args { get => _args; }
     private readonly string[] _args;
-    public string input { get => _input; }
-    private string _input = "";
     public bool close {
         get => _close;
         set => _close = value;
@@ -25,6 +25,12 @@ public class ProgData : Prog, ProgAPI {
     public TextOut Out { get => _o; }
     public Sys sys { get => _sys; }
     private readonly Sys _sys;
+
+    private bool _canInput;
+    public bool canInput {
+        get => _canInput;
+        set => _canInput = value;
+    }
 
     public ProgData(Sys s, TextOut o, Exe.RunFunc p, string[] args = null) {
         this._sys = s;
@@ -37,15 +43,10 @@ public class ProgData : Prog, ProgAPI {
         _close = true;
     }
 
-    public void Input(string inp) {
-        _input += inp;
-    }
-
     private IEnumerator<int?> inner = null;
 
     public int? Update() {
         if (inner.MoveNext()) {
-            _input = "";
             return null;
         } else {
             return inner.Current ?? 0;
@@ -53,28 +54,94 @@ public class ProgData : Prog, ProgAPI {
     }
 }
 
+// TODO handle cursor movement, screen display etc
+// History? arrow keys to swap? probably out of scope for this function
+// TODO generalize so it doesn't have to end at newline, and you can work directly with Cell
+// lists
+public class Readline {
+    private ProgAPI d;
+
+    private string prompt;
+    private Color32 promptCol = Util.WHITE;
+    private string i;
+    private Color32 iCol = Util.WHITE;
+
+    private bool exit = false;
+
+    public string Line { get => i; }
+
+    public bool Complete {
+        get => exit;
+        set {
+            if (value && !exit)
+                Stop();
+        }
+    }
+
+    private void UpdateScreen() {
+        d.Out.SetLine(prompt, promptCol);
+        d.Out.Print(i, iCol);
+    }
+
+    private void Stop() {
+        d.Out.Println();
+        exit = true;
+        Keyboard.current.onTextInput -= OnTextInput;
+    }
+
+    private void OnTextInput(char c) {
+        if (!exit && d.canInput) {
+            if (c == '\n' || c == '\r') {
+                Stop();
+                return;
+            } else if (c == '\b') {
+                if (i.Length > 0) {
+                    i = i.Remove(i.Length - 1, 1);
+                } else {
+                    return;
+                }
+            } else if (c == '\x1B' || c == '\a' || c == '\f' || c == '\t' || c == '\v') {
+            } else {
+                i += c;
+            }
+            UpdateScreen();
+        }
+    }
+
+    public Readline(ProgAPI d, string prompt, Color32? promptCol, string i = "",
+                    Color32? iCol = null) {
+        this.d = d;
+        this.prompt = prompt;
+        if (promptCol is Color32 pc)
+            this.promptCol = pc;
+        this.i = i;
+        if (iCol is Color32 ic)
+            this.iCol = ic;
+        UpdateScreen();
+        Keyboard.current.onTextInput += OnTextInput;
+    }
+}
+
 /// <summary>API provided to programs as they execute</summary>
 public interface ProgAPI {
     /// <summary>Arguments provided to a program</summary>
     string[] args { get; }
-    /// <summary>Input provided to program during frame</summary>
-    string input { get; }
     /// <summary>True if the program should be closed (CTRL+C)</summary>
     bool close { get; set; }
     /// <summary>The system the program is run on</summary>
     Sys sys { get; }
     /// <summary>Terminal output</summary>
     TextOut Out { get; }
+    /// <summary>Whether or not a program is allowed to read input from the user</summary>
+    bool canInput { get; }
 }
 
 /// <summary>API for interacting with a program</summary>
 public interface Prog {
+    bool canInput { get; set; }
+
     /// <summary>Request the program to close</summary>
     void Close();
-
-    // TODO This is pretty inadequate
-    /// <summary>Provide input to the program on this frame</summary>
-    void Input(string inp);
 
     /// <summary>Run the program for a frame</summary>
     int? Update();

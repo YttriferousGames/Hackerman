@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>Player movement and interaction</summary>
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController), typeof(PlayerInput))]
 public class PlayerMovement : MonoBehaviour {
     private CharacterController controller;
     private Vector3 playerVelocity;
+    public bool noclip = false;
     [SerializeField]
     private Camera cam;
     [SerializeField]
@@ -14,13 +16,27 @@ public class PlayerMovement : MonoBehaviour {
     private float gravityValue;
     [SerializeField]
     private float sensitivity = 10f;
+    private PlayerInput inp;
+    private InputAction moveAction;
+    private InputAction lookAction;
+    private InputAction jumpAction;
+
+    private static PlayerMovement _instance = null;
+
+    public static PlayerMovement instance { get => _instance; }
 
     private void Awake() {
+        if (_instance == null)
+            _instance = this;
         controller = GetComponent<CharacterController>();
         gravityValue = Physics.gravity.y;
         if (cam == null) {
             cam = Camera.main;
         }
+        inp = GetComponent<PlayerInput>();
+        moveAction = inp.actions["Move"];
+        lookAction = inp.actions["Look"];
+        jumpAction = inp.actions["Jump"];
     }
 
     private void Start() {
@@ -32,7 +48,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void Update() {
-        if (Input.GetKey(KeyCode.Escape)) {
+        if (Keyboard.current.escapeKey.isPressed) {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
@@ -43,8 +59,9 @@ public class PlayerMovement : MonoBehaviour {
         } else if (Cursor.lockState == CursorLockMode.Locked && Cursor.visible) {
             Cursor.visible = false;
         } else {
-            mX = Input.GetAxis("Mouse X");
-            mY = Input.GetAxis("Mouse Y");
+            Vector2 m = lookAction.ReadValue<Vector2>();
+            mX = m.x;
+            mY = m.y;
         }
         float angle = transform.eulerAngles.y;
         float camAngle = cam.transform.localEulerAngles.x;
@@ -55,32 +72,41 @@ public class PlayerMovement : MonoBehaviour {
         transform.eulerAngles = new Vector3(0f, angle, 0f);
         cam.transform.localEulerAngles = new Vector3(camAngle, 0, 0f);
 
-        bool handleInput = true;
         RaycastHit h = new RaycastHit();
+        bool handleInput = true;
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out h, 1f, 1 << 6,
                             QueryTriggerInteraction.Collide)) {
             SysInterface s = h.collider.gameObject.GetComponent<SysInterface>();
-            s.HandleInput(s != null);
             handleInput = s == null;
+            if (!handleInput)
+                s.HandleInput(true);
         }
 
-        bool groundedPlayer = controller.isGrounded;
-        if (controller.isGrounded) {
-            if (playerVelocity.y < 0) {
-                playerVelocity.y = 0f;
+        Vector2 moveInp = moveAction.ReadValue<Vector2>();
+
+        Vector3 move = (transform.right * moveInp.x + transform.forward * moveInp.y) * playerSpeed;
+        if (noclip) {
+            if (handleInput) {
+                transform.position += cam.transform.rotation *
+                                      (Vector3.right * moveInp.x + Vector3.forward * moveInp.y) *
+                                      playerSpeed * Time.deltaTime;
             }
-            if (handleInput && Input.GetButtonDown("Jump")) {
-                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+        } else {
+            bool groundedPlayer = controller.isGrounded;
+            if (controller.isGrounded) {
+                if (playerVelocity.y < 0) {
+                    playerVelocity.y = 0f;
+                }
+                if (handleInput && jumpAction.IsPressed()) {
+                    playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+                }
             }
+
+            playerVelocity.y += gravityValue * Time.deltaTime;
+
+            if (!handleInput)
+                move = Vector3.zero;
+            controller.Move((move + playerVelocity) * Time.deltaTime);
         }
-
-        playerVelocity.y += gravityValue * Time.deltaTime;
-
-        Vector3 move = (transform.right * Input.GetAxis("Horizontal") +
-                        transform.forward * Input.GetAxis("Vertical")) *
-                       playerSpeed;
-        if (!handleInput)
-            move = Vector3.zero;
-        controller.Move((move + playerVelocity) * Time.deltaTime);
     }
 }

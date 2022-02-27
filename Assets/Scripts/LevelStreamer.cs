@@ -85,8 +85,10 @@ public class LevelStreamer : MonoBehaviour {
                 UnityEngine.Debug.Log("Loading scene ID " + s.ToString());
                 SceneManager.LoadSceneAsync(s, LoadSceneMode.Additive);
             } foreach (Scene s in scenes) {
-                if (s.isLoaded && (s.buildIndex < minLevelInside.Value.buildIndex - 1 ||
-                                   s.buildIndex > maxLevelInside.Value.buildIndex + 1)) {
+                if (s.isLoaded && ((minLevelInside != null &&
+                                    s.buildIndex < minLevelInside.Value.buildIndex - 1) ||
+                                   (maxLevelInside != null &&
+                                    s.buildIndex > maxLevelInside.Value.buildIndex + 1))) {
                     UnityEngine.Debug.Log("Unloading scene ID " + s.buildIndex.ToString());
                     SceneManager.UnloadSceneAsync(s);
                 }
