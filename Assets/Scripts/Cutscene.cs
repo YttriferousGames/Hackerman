@@ -14,6 +14,10 @@ public class Cutscene : MonoBehaviour {
 
     private void Awake() {
         vp = GetComponent<VideoPlayer>();
+#if UNITY_WEBGL
+        vp.source = VideoSource.Url;
+        vp.url = "https://yttriferous.dev/gamdemo/Prologue.webm";
+#endif
     }
 
     private void Start() {

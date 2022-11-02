@@ -114,6 +114,7 @@ GameObject:
   - component: {fileID: 4016199344379074353}
   - component: {fileID: 3862366289291340167}
   - component: {fileID: 8960122323922177945}
+  - component: {fileID: 1213412853460143284}
   m_Layer: 6
   m_Name: PC
   m_TagString: Untagged
@@ -129,7 +130,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4481129236898843618}
   m_LocalRotation: {x: -0.7660445, y: 0, z: 0, w: 0.64278764}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalPosition: {x: 0, y: 2.53, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -227,6 +228,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd959438947d439a7a07b52906c838cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  width: 40
+  height: 18
   status: {fileID: 8300000, guid: 61750ab649473667d9379025dcc6cd98, type: 3}
 --- !u!65 &4016199344379074353
 BoxCollider:
@@ -370,3 +373,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1213412853460143284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4481129236898843618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa50545e304db5ee096d13a42eebf6da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineRenderer: {fileID: 657261024345184573}
+  hovering: 0

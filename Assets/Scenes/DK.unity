@@ -157,7 +157,7 @@ VideoPlayer:
   m_TimeReference: 0
   m_TargetMaterialRenderer: {fileID: 0}
   m_TargetMaterialProperty: <noninit>
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_AspectRatio: 3
   m_DataSource: 0
   m_PlaybackSpeed: 1
@@ -172,7 +172,7 @@ VideoPlayer:
   m_ControlledAudioTrackCount: 1
   m_PlayOnAwake: 1
   m_SkipOnDrop: 1
-  m_Looping: 1
+  m_Looping: 0
   m_WaitForFirstFrame: 1
   m_FrameReadyEventEnabled: 0
   m_VideoShaders: []
@@ -203,7 +203,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 959b764c4cb7534bead2ffc35d811651, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  s: 
 --- !u!1 &974137328
 GameObject:
   m_ObjectHideFlags: 0

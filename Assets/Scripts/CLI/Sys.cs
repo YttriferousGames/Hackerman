@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using System.Linq;
 
 // TODO Remember to support communication between systems and fancy stuff
@@ -12,10 +13,14 @@ public class Sys : MonoBehaviour {
     private FSLayerName[] layers = new FSLayerName[] { FSLayerName.Base };
     private FS fs;
 
+    /// <summary>Username</summary>
+    public static readonly string user = "geff";
     /// <summary>Home directory</summary>
     public readonly Path home = "/home/geff/";
     /// <summary>Current working directory</summary>
     public Path workingDir = "/home/geff/";
+
+    private Dictionary<string, string> EnvVars = new Dictionary<string, string>();
 
     /// <summary>Gets a Node at a path</summary>
     public Node GetNode(Path path) {
@@ -97,7 +102,25 @@ public class Sys : MonoBehaviour {
         }
     }
 
+    /// <summary>Parses quoting for a word (see SH spec.)</summary>
+    public string[] Dequote(string s) {
+        // Tilde-expansion
+        if (s.StartsWith("~/")) {
+            s = EnvVars["HOME"] + s.Substring(1);
+        }
+        // Field splitting TODO
+        string[] fields = null;
+        fields = s.Split(fields, System.StringSplitOptions.RemoveEmptyEntries);
+        // Quote removal TODO
+
+        return new string[] { s };
+    }
+
     private void Start() {
         fs = new StackedFS(layers.Select(l => l.Create()));
+        EnvVars.Add("HOME", "/home/geff");
+        EnvVars.Add("PWD", "/home/geff");
+        // TODO
+        EnvVars.Add("PATH", "TODO");
     }
 }

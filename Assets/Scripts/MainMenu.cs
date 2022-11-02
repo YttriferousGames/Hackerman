@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 
 /// <summary>Controls buttons on Main Menu and loading to next scene</summary>
-[RequireComponent(typeof(Camera))]
+[RequireComponent(typeof(Camera), typeof(AudioSource))]
 public class MainMenu : MonoBehaviour {
     private Camera cam;
     [SerializeField]
@@ -14,14 +14,21 @@ public class MainMenu : MonoBehaviour {
     [SerializeField]
     private GameObject quit;
     private BitText quit_bt;
+    private AudioSource src;
 
     private void Awake() {
         cam = GetComponent<Camera>();
+        src = GetComponent<AudioSource>();
         play_bt = play.GetComponent<BitText>();
         quit_bt = quit.GetComponent<BitText>();
     }
 
     private void LoadScene() {
+        // WebGL doesn't do this on scene switch
+        // and it kinda ignores Stop too
+        src.loop = false;
+        src.mute = true;
+        src.Stop();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
@@ -35,9 +42,11 @@ public class MainMenu : MonoBehaviour {
         if (Physics.Raycast(ray, out hitInfo, 10f, 1 << 5, QueryTriggerInteraction.Collide)) {
             if (hitInfo.collider.gameObject == play) {
                 play_bt.col = Color.white;
-                if (Mouse.current.leftButton.isPressed)
+                if (Mouse.current.leftButton.isPressed) {
                     LoadScene();
+                }
             } else if (hitInfo.collider.gameObject == quit) {
+#if !UNITY_WEBGL
                 BitText bt = quit.GetComponent<BitText>();
                 quit_bt.col = Color.white;
                 if (Mouse.current.leftButton.isPressed)
@@ -45,6 +54,7 @@ public class MainMenu : MonoBehaviour {
                     UnityEditor.EditorApplication.isPlaying = false;
 #else
                     Application.Quit();
+#endif
 #endif
             }
         }

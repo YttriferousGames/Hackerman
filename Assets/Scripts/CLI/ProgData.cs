@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
+using System.Text;
 
 // TODO Things to redesign:
 // - Input handling
@@ -100,10 +101,12 @@ public class Readline {
                 } else {
                     return;
                 }
-            } else if (c == '\x1B' || c == '\a' || c == '\f' || c == '\t' || c == '\v') {
+            } else if (c == '\x1B' || c == '\a' || c == '\f' || c == '\t' || c == '\v' || c == '\x7F') {
             } else {
                 i += c;
             }
+            // TODO trying to fix backspace on WebGL
+            //Debug.LogWarning(c);
             UpdateScreen();
         }
     }

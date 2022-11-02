@@ -30,7 +30,9 @@ public class BitText : MonoBehaviour {
     /// <summary>Padding between each character</summary>
     public Vector2 pad = new Vector2(0.25f, 0.25f);
     private bool includePad = true;
+#if UNITY_EDITOR
     private static string materialName = "Assets/Materials/Text/Text.mat";
+#endif
 
     private MeshFilter mf = null;
 
